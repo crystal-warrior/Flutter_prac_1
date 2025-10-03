@@ -28,7 +28,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,8 +37,13 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
         child:
-        Text('ФИО - Хвостов Сергей Дмитриевич\nНомер группы - ИКБО-06-22\nНомер студенческого билета - 22И0468\n',
+        const Text(
+          'ФИО - Хвостов Сергей Дмитриевич\nНомер группы - ИКБО-06-22\nНомер студенческого билета - 22И0468\n',
         textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 45,
+            color: Colors.amber,
+          )
         ),
       ),
     );
