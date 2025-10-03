@@ -36,18 +36,19 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const Text(
-              'ФИО - Хвостов Сергей Дмитриевич\nНомер группы - ИКБО-06-22\nНомер студенческого билета - 22И0468\n',
+              'ФИО - Хвостов Сергей Дмитриевич\nНомер группы - ИКБО-06-22\nНомер студенческого билета - 22И0468',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 20,
                 color: Colors.amber,
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(width: 20),
             ElevatedButton(
               onPressed: null,
               child: const Text('Я кнопка, я кнопка, я кнопка!'),
