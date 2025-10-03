@@ -40,8 +40,8 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(
-              width: 300,
+            Padding(
+              padding: const EdgeInsets.all(50),
               child: const Text(
                 'ФИО - Хвостов Сергей Дмитриевич\nНомер группы - ИКБО-06-22\nНомер студенческого билета - 22И0468',
                 textAlign: TextAlign.center,
@@ -51,19 +51,18 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
-            const SizedBox(width: 20),
-            SizedBox(
-              height: 50,
-              child: ElevatedButton(
-                onPressed: null,
-                child: const Text('Я кнопка, я кнопка, я кнопка!'),
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.deepPurple),
-                  foregroundColor: MaterialStateProperty.all(Colors.white),
-                  shape: MaterialStateProperty.all(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
-                    ),
+            const Padding(
+              padding: EdgeInsets.only(left: 40),
+            ),
+            ElevatedButton(
+              onPressed: null,
+              child: const Text('Я кнопка, я кнопка, я кнопка!'),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Colors.deepPurple),
+                foregroundColor: MaterialStateProperty.all(Colors.white),
+                shape: MaterialStateProperty.all(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25),
                   ),
                 ),
               ),
