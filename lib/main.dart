@@ -37,8 +37,6 @@ class GardenScreen extends StatelessWidget {
             Text('Тестовый текст 3!',
                 style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
             SizedBox(height: 40),
-
-
             _buildMenuButton(context, 'Каталог растений', Icons.spa, PlantCatalogScreen()),
             _buildMenuButton(context, 'Полив', Icons.water_drop, WateringScreen()),
             _buildMenuButton(context, 'Удобрения', Icons.eco, FertilizerScreen()),
