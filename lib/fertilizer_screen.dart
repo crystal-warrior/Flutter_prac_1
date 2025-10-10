@@ -21,14 +21,13 @@ class FertilizerScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: fertilizers.length,
-              itemBuilder: (context, index) {
+            child: ListView(
+              children: fertilizers.map((fertilizer) {
                 return ListTile(
                   leading: Icon(Icons.agriculture, color: Colors.brown),
-                  title: Text(fertilizers[index]),
+                  title: Text(fertilizer),
                 );
-              },
+              }).toList(),
             ),
           ),
         ],
