@@ -19,8 +19,12 @@ class MyPlantsScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           ),
           Expanded(
-            child: ListView.builder(
+            child: ListView.separated(
               itemCount: myPlants.length,
+              separatorBuilder: (context, index) => Divider(
+                height: 20,
+                color: Colors.green[300],
+              ),
               itemBuilder: (context, index) {
                 return Card(
                   margin: EdgeInsets.all(8),
