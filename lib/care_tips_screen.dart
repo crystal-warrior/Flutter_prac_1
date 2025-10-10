@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 
-class CareTipsScreen extends StatelessWidget {
+class CareTipsScreen extends StatefulWidget {
+  @override
+  _CareTipsScreenState createState() => _CareTipsScreenState();
+}
+
+class _CareTipsScreenState extends State<CareTipsScreen> {
   final List<Map<String, String>> tips = [
     {'title': 'Полив', 'tip': 'Поливайте утром или вечером'},
     {'title': 'Свет', 'tip': 'Обеспечьте достаточно солнечного света'},
@@ -15,6 +20,34 @@ class CareTipsScreen extends StatelessWidget {
     {'title': 'Проветривание', 'tip': 'Обеспечьте циркуляцию воздуха вокруг растений'},
   ];
 
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _tipController = TextEditingController();
+
+  void _addNewTip() {
+    if (_titleController.text.isNotEmpty && _tipController.text.isNotEmpty) {
+      setState(() {
+        tips.add({
+          'title': _titleController.text,
+          'tip': _tipController.text,
+        });
+      });
+      _titleController.clear();
+      _tipController.clear();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Совет добавлен!')),
+      );
+    }
+  }
+
+  void _removeTip(int index) {
+    setState(() {
+      tips.removeAt(index);
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Совет удален!')),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,19 +56,96 @@ class CareTipsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Card(
+              margin: EdgeInsets.all(15),
+              child: Padding(
+                padding: EdgeInsets.all(15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Добавить новый совет',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    SizedBox(height: 10),
+                    TextField(
+                      controller: _titleController,
+                      decoration: InputDecoration(
+                        labelText: 'Название совета',
+                        border: OutlineInputBorder(),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.green, width: 2.0),
+                        ),
+                        focusColor: Colors.green,
+                        labelStyle: TextStyle(color: Colors.green),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    TextField(
+                      controller: _tipController,
+                      decoration: InputDecoration(
+                        labelText: 'Текст совета',
+                        border: OutlineInputBorder(),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.green, width: 2.0),
+                        ),
+                        focusColor: Colors.green,
+                        labelStyle: TextStyle(color: Colors.green),
+                      ),
+                      maxLines: 3,
+                    ),
+                    SizedBox(height: 10),
+                    Center(
+                      child: ElevatedButton.icon(
+                        onPressed: _addNewTip,
+                        icon: Icon(Icons.add),
+                        label: Text('Добавить совет'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          foregroundColor: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15),
+              child: Text('Советы по уходу:',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            ),
+            SizedBox(height: 10),
+
             for (int i = 0; i < tips.length; i++)
-              Card(
-                margin: EdgeInsets.only(bottom: 15),
-                child: Padding(
-                  padding: EdgeInsets.all(15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(tips[i]['title']!,
-                          style: TextStyle( fontSize: 18, fontWeight: FontWeight.bold)),
-                      SizedBox(height: 8),
-                      Text(tips[i]['tip']!),
-                    ],
+              GestureDetector(
+                key: ValueKey('tip_${tips[i]['title']}_$i'),
+                onTap: () => _removeTip(i),
+                child: Card(
+                  margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                  child: Padding(
+                    padding: EdgeInsets.all(15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text(tips[i]['title']!,
+                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                            ),
+                            Icon(Icons.delete_outline, color: Colors.red, size: 20),
+                          ],
+                        ),
+                        SizedBox(height: 8),
+                        Text(tips[i]['tip']!),
+                        SizedBox(height: 5),
+                        Text(
+                          'Нажмите для удаления',
+                          style: TextStyle(fontSize: 10, color: Colors.red),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -44,4 +154,11 @@ class CareTipsScreen extends StatelessWidget {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _tipController.dispose();
+    super.dispose();
   }
+}
