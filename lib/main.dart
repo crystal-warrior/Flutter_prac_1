@@ -29,17 +29,23 @@ class GardenScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.eco, size: 80, color: Colors.green),
-            SizedBox(height: 20),
-            Text('Добро пожаловать в сад!',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+
+            Text('Тестовый текст 1!',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            Text('Тестовый текст 2!',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text('Тестовый текст 3!',
+                style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
             SizedBox(height: 40),
+
 
             _buildMenuButton(context, 'Каталог растений', Icons.spa, PlantCatalogScreen()),
             _buildMenuButton(context, 'Полив', Icons.water_drop, WateringScreen()),
             _buildMenuButton(context, 'Удобрения', Icons.eco, FertilizerScreen()),
             _buildMenuButton(context, 'Советы по уходу', Icons.help, CareTipsScreen()),
             _buildMenuButton(context, 'Мои растения', Icons.agriculture, MyPlantsScreen()),
+            _buildMenuButton(context, 'Кнопка в разработке', Icons.access_alarm_outlined, MyPlantsScreen()),
+            _buildMenuButton(context, 'Эксперимент', Icons.account_balance, MyPlantsScreen()),
           ],
         ),
       ),
