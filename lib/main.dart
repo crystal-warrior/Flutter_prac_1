@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jhvostov_prac_1/ProblemScreen.dart';
 import 'package:jhvostov_prac_1/care_tips_screen.dart';
 import 'package:jhvostov_prac_1/fertilizer_screen.dart';
 import 'package:jhvostov_prac_1/my_plants_screen.dart';
@@ -55,7 +56,7 @@ class GardenScreen extends StatelessWidget {
     {
       'title': 'Эксперимент',
       'icon': Icons.account_balance,
-      'screen': MyPlantsScreen(),
+      'screen': ProblemScreen(),
     },
     {
       'title': 'Дополнительная кнопка 1',
