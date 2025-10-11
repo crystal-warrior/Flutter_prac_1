@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:jhvostov_prac_1/ProblemScreen.dart';
-import 'package:jhvostov_prac_1/care_tips_screen.dart';
-import 'package:jhvostov_prac_1/fertilizer_screen.dart';
-import 'package:jhvostov_prac_1/my_plants_screen.dart';
-import 'package:jhvostov_prac_1/plant_catalog_screen.dart';
-import 'package:jhvostov_prac_1/watering_screen.dart';
+import 'package:jhvostov_prac_1/screens/ProblemScreen.dart';
+import 'package:jhvostov_prac_1/screens/care_tips_screen.dart';
+import 'package:jhvostov_prac_1/screens/fertilizer_screen.dart';
+import 'package:jhvostov_prac_1/screens/my_plants_screen.dart';
+import 'package:jhvostov_prac_1/screens/plant_catalog_screen.dart';
+import 'package:jhvostov_prac_1/screens/watering_screen.dart';
 
 void main() {
   runApp(PlantApp());
