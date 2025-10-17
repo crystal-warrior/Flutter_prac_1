@@ -1,14 +1,12 @@
 class PlantModel {
-  final String id; // уникальный идентификатор
-  final String name; // официальное название
-  final String? description; // краткое описание
-  final String type; // цветок, дерево, куст, принадлежность к семейству
-  final int careComplexity; // сложность ухода от 1 до 10
+  final String id; // уникальный идент. растения
+  final String name; // имя растения
+  final String type; // тип растения: куст, дерево и так далее
+  final int careComplexity; // сложность ухода за растением от 1 до 10
 
-  PlantModel({
+  const PlantModel({
     required this.id,
     required this.name,
-    this.description,
     required this.type,
     required this.careComplexity,
   });
@@ -16,14 +14,12 @@ class PlantModel {
   PlantModel copyWith({
     String? id,
     String? name,
-    String? description,
     String? type,
     int? careComplexity,
   }) {
     return PlantModel(
       id: id ?? this.id,
       name: name ?? this.name,
-      description: description ?? this.description,
       type: type ?? this.type,
       careComplexity: careComplexity ?? this.careComplexity,
     );
