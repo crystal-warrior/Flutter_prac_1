@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:jhvostov_prac_1/screens/ProblemScreen.dart';
-import 'package:jhvostov_prac_1/screens/care_tips_screen.dart';
-import 'package:jhvostov_prac_1/screens/fertilizer_screen.dart';
-import 'package:jhvostov_prac_1/screens/my_plants_screen.dart';
-import 'package:jhvostov_prac_1/screens/plant_catalog_screen.dart';
-import 'package:jhvostov_prac_1/screens/watering_screen.dart';
+import 'package:jhvostov_prac_1/features/care_tips/screens/care_tips_screen.dart';
+import 'package:jhvostov_prac_1/features/fertilizers/screen/fertilizer_screen.dart';
+import 'package:jhvostov_prac_1/features/my_plants/screens/my_plants_screen.dart';
+import 'package:jhvostov_prac_1/features/plant/screens/plants_screen.dart';
+import 'package:jhvostov_prac_1/features/watering/screens/watering_screen.dart';
 
 void main() {
   runApp(PlantApp());
@@ -48,6 +47,8 @@ class GardenScreen extends StatelessWidget {
       'icon': Icons.agriculture,
       'screen': MyPlantsScreen(),
     },
+    // старые кнопки
+    /*
     {
       'title': 'Кнопка в разработке',
       'icon': Icons.access_alarm_outlined,
@@ -108,6 +109,7 @@ class GardenScreen extends StatelessWidget {
       'icon': Icons.spoke_rounded,
       'screen': MyPlantsScreen(),
     },
+     */
   ];
 
   @override
