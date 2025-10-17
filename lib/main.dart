@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:jhvostov_prac_1/features/care_tips/screens/care_tips_screen.dart';
-import 'package:jhvostov_prac_1/features/fertilizers/screen/fertilizer_screen.dart';
+import 'package:jhvostov_prac_1/features/fertilizers/screens/fertilizer_screen.dart';
 import 'package:jhvostov_prac_1/features/my_plants/screens/my_plants_screen.dart';
-import 'package:jhvostov_prac_1/features/plant/screens/plants_screen.dart';
+import 'package:jhvostov_prac_1/features/plant/state/plants_container.dart';
 import 'package:jhvostov_prac_1/features/watering/screens/watering_screen.dart';
+import 'package:jhvostov_prac_1/shared/app_theme.dart';
 
 void main() {
   runApp(PlantApp());
@@ -14,7 +15,7 @@ class PlantApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Мой Сад',
-      theme: ThemeData(primarySwatch: Colors.green),
+      theme: AppTheme.lightTheme,
       home: GardenScreen(),
     );
   }
@@ -23,18 +24,13 @@ class PlantApp extends StatelessWidget {
 class GardenScreen extends StatelessWidget {
   final List<Map<String, dynamic>> menuItems = [
     {
-      'title': 'Каталог растений',
-      'icon': Icons.spa,
-      'screen': PlantCatalogScreen(),
-    },
-    {
       'title': 'Полив',
       'icon': Icons.water_drop,
       'screen': WateringScreen(),
     },
     {
       'title': 'Удобрения',
-      'icon': Icons.eco,
+      'icon': Icons.agriculture,
       'screen': FertilizerScreen(),
     },
     {
@@ -43,73 +39,15 @@ class GardenScreen extends StatelessWidget {
       'screen': CareTipsScreen(),
     },
     {
-      'title': 'Мои растения',
-      'icon': Icons.agriculture,
-      'screen': MyPlantsScreen(),
-    },
-    // старые кнопки
-    /*
-    {
-      'title': 'Кнопка в разработке',
-      'icon': Icons.access_alarm_outlined,
-      'screen': MyPlantsScreen(),
-    },
-    {
-      'title': 'Эксперимент',
-      'icon': Icons.account_balance,
-      'screen': ProblemScreen(),
-    },
-    {
-      'title': 'Дополнительная кнопка 1',
-      'icon': Icons.add,
-      'screen': MyPlantsScreen(),
-    },
-    {
-      'title': 'Дополнительная кнопка 2',
-      'icon': Icons.grass,
-      'screen': MyPlantsScreen(),
-    },
-    {
-      'title': 'Дополнительная кнопка 3',
-      'icon': Icons.local_florist,
-      'screen': MyPlantsScreen(),
-    },
-    {
-      'title': 'Дополнительная кнопка 4',
-      'icon': Icons.park,
-      'screen': MyPlantsScreen(),
-    },
-    {
-      'title': 'Дополнительная кнопка 5',
-      'icon': Icons.nature,
-      'screen': MyPlantsScreen(),
-    },
-    {
-      'title': 'Дополнительная кнопка 6',
-      'icon': Icons.forest,
-      'screen': MyPlantsScreen(),
-    },
-    {
-      'title': 'Дополнительная кнопка 7',
-      'icon': Icons.emoji_nature,
-      'screen': MyPlantsScreen(),
-    },
-    {
-      'title': 'Дополнительная кнопка 8',
-      'icon': Icons.yard,
-      'screen': MyPlantsScreen(),
-    },
-    {
-      'title': 'Дополнительная кнопка 9',
+      'title': 'Состояние растений',
       'icon': Icons.eco,
       'screen': MyPlantsScreen(),
     },
     {
-      'title': 'Дополнительная кнопка 10',
-      'icon': Icons.spoke_rounded,
-      'screen': MyPlantsScreen(),
+      'title': 'Мои растения',
+      'icon': Icons.favorite,
+      'screen': const PlantsContainer(),
     },
-     */
   ];
 
   @override
@@ -124,7 +62,7 @@ class GardenScreen extends StatelessWidget {
             return Align(
               alignment: Alignment.center,
               child: Text(
-                'Добро пожаловать в сад!',
+                'Добро пожаловать в Сад!',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
@@ -156,8 +94,6 @@ class GardenScreen extends StatelessWidget {
           icon: Icon(icon),
           label: Text(title),
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.green,
-            foregroundColor: Colors.white,
             padding: EdgeInsets.symmetric(vertical: 15),
           ),
         ),
