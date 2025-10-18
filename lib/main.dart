@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jhvostov_prac_1/features/care_tips/screens/care_tips_screen.dart';
-import 'package:jhvostov_prac_1/features/fertilizers/screens/fertilizer_screen.dart';
-import 'package:jhvostov_prac_1/features/my_plants/screens/my_plants_screen.dart';
 import 'package:jhvostov_prac_1/features/plant/state/plants_container.dart';
-import 'package:jhvostov_prac_1/features/watering/screens/watering_screen.dart';
 import 'package:jhvostov_prac_1/shared/app_theme.dart';
 
 void main() {
@@ -23,26 +19,6 @@ class PlantApp extends StatelessWidget {
 
 class GardenScreen extends StatelessWidget {
   final List<Map<String, dynamic>> menuItems = [
-    {
-      'title': 'Полив',
-      'icon': Icons.water_drop,
-      'screen': WateringScreen(),
-    },
-    {
-      'title': 'Удобрения',
-      'icon': Icons.agriculture,
-      'screen': FertilizerScreen(),
-    },
-    {
-      'title': 'Советы по уходу',
-      'icon': Icons.help,
-      'screen': CareTipsScreen(),
-    },
-    {
-      'title': 'Состояние растений',
-      'icon': Icons.eco,
-      'screen': MyPlantsScreen(),
-    },
     {
       'title': 'Мои растения',
       'icon': Icons.favorite,
