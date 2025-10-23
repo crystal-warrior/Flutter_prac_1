@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class WateringScreen extends StatefulWidget {
   @override
@@ -8,6 +9,8 @@ class WateringScreen extends StatefulWidget {
 class _WateringScreenState extends State<WateringScreen> {
   int _waterLevel = 0;
 
+  final String _imageUrl = "https://cdn-icons-png.flaticon.com/512/4195/4195647.png";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,7 +19,26 @@ class _WateringScreenState extends State<WateringScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.water_drop, size: 60, color: Colors.blue),
+
+
+
+            SizedBox( // размеры изображения
+              width: 100,
+              height: 100,
+              child: CachedNetworkImage(
+                imageUrl: _imageUrl,
+                progressIndicatorBuilder: (context, url, progress) =>
+                const CircularProgressIndicator(),
+                errorWidget: (context, url, error) => const Center(
+                  child: Icon(
+                    Icons.error,
+                    color: Colors.red,
+                    size: 50,
+                  ),
+                ),
+                fit: BoxFit.contain,
+              ),
+            ),
             SizedBox(height: 20),
             Text('Уровень полива: $_waterLevel%',
                 style: TextStyle(fontSize: 24)),
@@ -26,6 +48,7 @@ class _WateringScreenState extends State<WateringScreen> {
               min: 0,
               max: 100,
               activeColor: Colors.blue,
+              inactiveColor: Colors.blue.withOpacity(0.3),
               onChanged: (value) {
                 setState(() {
                   _waterLevel = value.round();

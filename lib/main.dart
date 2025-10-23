@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jhvostov_prac_1/features/plant/state/plants_container.dart';
+import 'package:jhvostov_prac_1/features/watering/screens/watering_screen.dart';
 import 'package:jhvostov_prac_1/shared/app_theme.dart';
 
 void main() {
@@ -23,6 +24,11 @@ class GardenScreen extends StatelessWidget {
       'title': 'Мои растения',
       'icon': Icons.favorite,
       'screen': const PlantsContainer(),
+    },
+    {
+      'title': 'Полив',
+      'icon': Icons.water_drop,
+      'screen': WateringScreen(),
     },
   ];
 
