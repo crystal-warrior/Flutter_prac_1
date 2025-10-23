@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class MyPlantsScreen extends StatefulWidget {
   @override
@@ -6,6 +7,9 @@ class MyPlantsScreen extends StatefulWidget {
 }
 
 class _MyPlantsScreenState extends State<MyPlantsScreen> {
+
+  final String _imageUrl = "https://i.pinimg.com/736x/1e/c1/ae/1ec1ae3a7680e44dec7c1549468fbf62.jpg";
+
   final List<Map<String, dynamic>> myPlants = [
     {'name': 'Кактус', 'days': 7, 'health': 'Хорошо'},
     {'name': 'Фикус', 'days': 3, 'health': 'Отлично'},
@@ -49,6 +53,32 @@ class _MyPlantsScreenState extends State<MyPlantsScreen> {
       appBar: AppBar(title: Text('Мои растения')),
       body: Column(
         children: [
+
+          Center(
+            child:
+            SizedBox(
+              width: 210,
+              height: 210,
+              child: CachedNetworkImage(
+                imageUrl: _imageUrl,
+                progressIndicatorBuilder: (context, url, progress) =>
+                const CircularProgressIndicator(),
+                errorWidget: (context, url, error) => const Center(
+                  child: Icon(
+                    Icons.error,
+                    color: Colors.red,
+                    size: 50,
+                  ),
+                ),
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
+
+
+
+
+
           Card(
             margin: EdgeInsets.all(16),
             child: Padding(
