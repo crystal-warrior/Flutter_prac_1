@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class FertilizerScreen extends StatefulWidget {
   @override
@@ -6,6 +7,11 @@ class FertilizerScreen extends StatefulWidget {
 }
 
 class _FertilizerScreenState extends State<FertilizerScreen> {
+
+  final String _imageUrl = "https://cdn-icons-png.flaticon.com/512/122/122499.png";
+
+
+
   final List<String> fertilizers = [
     'Органические удобрения',
     'Минеральные удобрения',
@@ -43,6 +49,31 @@ class _FertilizerScreenState extends State<FertilizerScreen> {
       appBar: AppBar(title: Text('Удобрения')),
       body: Column(
         children: [
+
+          Center(
+            child:
+            SizedBox(
+              width: 210,
+              height: 210,
+              child: CachedNetworkImage(
+                imageUrl: _imageUrl,
+                progressIndicatorBuilder: (context, url, progress) =>
+                const CircularProgressIndicator(),
+                errorWidget: (context, url, error) => const Center(
+                  child: Icon(
+                    Icons.error,
+                    color: Colors.red,
+                    size: 50,
+                  ),
+                ),
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
+
+
+
+
           Card(
             margin: EdgeInsets.all(16),
             child: Padding(
