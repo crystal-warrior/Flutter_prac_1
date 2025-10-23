@@ -19,9 +19,6 @@ class _WateringScreenState extends State<WateringScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-
-
-
             SizedBox( // размеры изображения
               width: 100,
               height: 100,
