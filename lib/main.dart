@@ -1,23 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:jhvostov_prac_1/app_router.dart';
 import 'package:jhvostov_prac_1/features/care_tips/screens/care_tips_screen.dart';
 import 'package:jhvostov_prac_1/features/fertilizers/screens/fertilizer_screen.dart';
 import 'package:jhvostov_prac_1/features/my_plants/screens/my_plants_screen.dart';
 import 'package:jhvostov_prac_1/features/plant/state/plants_container.dart';
 import 'package:jhvostov_prac_1/features/watering/screens/watering_screen.dart';
 import 'package:jhvostov_prac_1/shared/app_theme.dart';
-import 'package:cached_network_image/cached_network_image.dart'; // Добавьте этот импорт
+import 'package:cached_network_image/cached_network_image.dart';
 
 void main() {
   runApp(PlantApp());
 }
 
 class PlantApp extends StatelessWidget {
+  PlantApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Мой Сад',
       theme: AppTheme.lightTheme,
-      home: GardenScreen(),
+      routerConfig: appRouter,
     );
   }
 }
@@ -29,27 +33,27 @@ class GardenScreen extends StatelessWidget {
     {
       'title': 'Мои растения',
       'icon': Icons.favorite,
-      'screen': const PlantsContainer(),
+      'route': 'my_plants',
     },
     {
       'title': 'Полив',
       'icon': Icons.water_drop,
-      'screen': WateringScreen(),
+      'route': 'watering',
     },
     {
       'title': 'Советы',
-      'icon': Icons.water_drop,
-      'screen': CareTipsScreen(),
+      'icon': Icons.lightbulb,
+      'route': 'care_tips',
     },
     {
       'title': 'Удобрения',
       'icon': Icons.agriculture,
-      'screen': FertilizerScreen(),
+      'route': 'fertilizers',
     },
     {
       'title': 'Состояние растений',
       'icon': Icons.local_florist_rounded,
-      'screen': MyPlantsScreen(),
+      'route': 'plant_status',
     },
   ];
 
@@ -59,7 +63,7 @@ class GardenScreen extends StatelessWidget {
       appBar: AppBar(title: Text('Мой Сад')),
       body: ListView.builder(
         padding: EdgeInsets.all(16),
-        itemCount: menuItems.length + 2, // из-за изображение увеличиваем на 2
+        itemCount: menuItems.length + 2,
         itemBuilder: (context, index) {
           if (index == 0) {
             return Center(
@@ -103,7 +107,7 @@ class GardenScreen extends StatelessWidget {
               context,
               item['title'] as String,
               item['icon'] as IconData,
-              item['screen'] as Widget,
+              item['route'] as String,
             );
           }
         },
@@ -111,14 +115,14 @@ class GardenScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMenuButton(BuildContext context, String title, IconData icon, Widget screen) {
+  Widget _buildMenuButton(BuildContext context, String title, IconData icon, String routeName) {
     return Center(
       child: Container(
         width: 250,
         margin: EdgeInsets.all(8),
         child: ElevatedButton.icon(
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
+            context.pushNamed(routeName);
           },
           icon: Icon(icon),
           label: Text(title),
