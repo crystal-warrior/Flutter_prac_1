@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class CareTipsScreen extends StatefulWidget {
   @override
@@ -6,6 +7,10 @@ class CareTipsScreen extends StatefulWidget {
 }
 
 class _CareTipsScreenState extends State<CareTipsScreen> {
+
+  final String _imageUrl = "https://static.tildacdn.com/tild6438-6539-4066-a439-663263363239/free-icon-grow-plant.png";
+
+
   final List<Map<String, String>> tips = [
     {'title': 'Полив', 'tip': 'Поливайте утром или вечером'},
     {'title': 'Свет', 'tip': 'Обеспечьте достаточно солнечного света'},
@@ -56,6 +61,29 @@ class _CareTipsScreenState extends State<CareTipsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Center(
+              child:
+            SizedBox(
+              width: 210,
+              height: 210,
+              child: CachedNetworkImage(
+                imageUrl: _imageUrl,
+                progressIndicatorBuilder: (context, url, progress) =>
+                const CircularProgressIndicator(),
+                errorWidget: (context, url, error) => const Center(
+                  child: Icon(
+                    Icons.error,
+                    color: Colors.red,
+                    size: 50,
+                  ),
+                ),
+                fit: BoxFit.contain,
+              ),
+            ),
+            ),
+
+
+
             Card(
               margin: EdgeInsets.all(15),
               child: Padding(
