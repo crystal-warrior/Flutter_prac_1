@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:jhvostov_prac_1/features/plant/screens/plant_screen.dart';
 import '../models/plant_model.dart';
-import '../screens/plant_screen.dart';
+
 import '../screens/plant_form_screen.dart';
 
 enum Screen { list, form }
@@ -14,7 +15,6 @@ class PlantsContainer extends StatefulWidget {
 
 class _PlantsContainerState extends State<PlantsContainer> {
   final List<PlantModel> _plants = [];
-  Screen _currentScreen = Screen.list;
   PlantModel? _recentlyRemovedPlant;
 
   double get _averageComplexity {
@@ -60,26 +60,13 @@ class _PlantsContainerState extends State<PlantsContainer> {
     }
   }
 
-  void _goBackToMainScreen() {
-    Navigator.pop(context);
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Мои Растения'),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: _goBackToMainScreen,
-        ),
-      ),
-      body: PlantsScreen(
-        plants: _plants,
-        averageComplexity: _averageComplexity,
-        onAdd: _addPlant,
-        onRemove: _removePlant,
-      ),
+    return PlantsScreen(
+      plants: _plants,
+      averageComplexity: _averageComplexity,
+      onAdd: _addPlant,
+      onRemove: _removePlant,
     );
   }
 }

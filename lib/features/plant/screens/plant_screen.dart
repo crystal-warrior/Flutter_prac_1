@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/plant_model.dart';
 import '../widgets/plants_table.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'plant_form_screen.dart';
+import 'package:go_router/go_router.dart';
 
 class PlantsScreen extends StatelessWidget {
   final String _imageUrl = "https://static.vecteezy.com/system/resources/previews/001/500/436/large_2x/many-plants-in-greenhouse-with-glass-wall-on-white-background-free-vector.jpg";
@@ -19,34 +19,6 @@ class PlantsScreen extends StatelessWidget {
     required this.onAdd,
     required this.onRemove,
   });
-
-
-  void _navigateToAddPlant(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => PlantFormScreen(
-          onSave: (String name, String type, int careComplexity) {
-
-            final newPlant = PlantModel(
-              id: DateTime.now().microsecondsSinceEpoch.toString(),
-              name: name,
-              type: type,
-              careComplexity: careComplexity,
-            );
-
-            onAdd(newPlant);
-
-            Navigator.pop(context);
-          },
-          onCancel: () {
-
-            Navigator.pop(context);
-          },
-        ),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,6 +84,14 @@ class PlantsScreen extends StatelessWidget {
               ),
             ),
           ),
+
+          ElevatedButton(
+            onPressed: () {
+              context.push('/plant_form');
+            },
+            child: const Text('Добавить растение'),
+          ),
+          const SizedBox(height: 20),
           Expanded(
             child: plants.isEmpty
                 ? _buildEmptyState()
@@ -123,7 +103,9 @@ class PlantsScreen extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _navigateToAddPlant(context),
+        onPressed: () {
+          context.push('/plant_form');
+        },
         child: const Icon(Icons.add, color: Colors.white),
       ),
     );

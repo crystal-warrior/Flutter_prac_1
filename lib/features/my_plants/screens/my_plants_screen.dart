@@ -50,7 +50,7 @@ class _MyPlantsScreenState extends State<MyPlantsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Состояние')),
+      appBar: AppBar(title: Text('Мои растения')),
       body: Column(
         children: [
 

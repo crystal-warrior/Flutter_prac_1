@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:jhvostov_prac_1/features/plant/models/plant_model.dart';
 import 'main.dart';
+import '../features/plant/screens/plant_form_screen.dart';
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/',
+  initialLocation: '/my_plants',
   routes: [
     ShellRoute(
       builder: (context, state, child) {
@@ -23,6 +25,7 @@ final GoRouter appRouter = GoRouter(
           path: '/',
           name: 'home',
           builder: (context, state) => Container(),
+          redirect: (context, state) => '/my_plants',
         ),
         GoRoute(
           path: '/my_plants',
@@ -52,41 +55,70 @@ final GoRouter appRouter = GoRouter(
       ],
     ),
 
+
+    GoRoute(
+      path: '/plant_form',
+      name: 'plant_form',
+      pageBuilder: (context, state) {
+        return MaterialPage(
+          key: state.pageKey,
+          child: PlantFormScreen(
+            onSave: (String name, String type, int careComplexity) {
+
+              final newPlant = PlantModel(
+                id: DateTime.now().microsecondsSinceEpoch.toString(),
+                name: name,
+                type: type,
+                careComplexity: careComplexity,
+              );
+              context.pop(newPlant);
+            },
+            onCancel: () {
+              context.pop();
+            },
+          ),
+        );
+      },
+    ),
+
     GoRoute(
       path: '/plant_detail',
       name: 'plant_detail',
-      builder: (context, state) {
+      pageBuilder: (context, state) {
         final plantName = state.uri.queryParameters['name'] ?? 'Растение';
         final plantDescription = state.uri.queryParameters['description'] ?? 'Описание';
 
-        return Scaffold(
-          appBar: AppBar(
-            title: Text('Детали растения'),
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () => context.pop(),
+        return MaterialPage(
+          key: state.pageKey,
+          child: Scaffold(
+            appBar: AppBar(
+              title: Text('Детали растения'),
+              leading: IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () => context.pop(),
+              ),
             ),
-          ),
-          body: Padding(
-            padding: EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  plantName,
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 16),
-                Text(
-                  plantDescription,
-                  style: TextStyle(fontSize: 16),
-                ),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () => context.pop(),
-                  child: Text('Вернуться назад'),
-                ),
-              ],
+            body: Padding(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    plantName,
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    plantDescription,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () => context.pop(),
+                    child: Text('Вернуться назад'),
+                  ),
+                ],
+              ),
             ),
           ),
         );
@@ -94,35 +126,3 @@ final GoRouter appRouter = GoRouter(
     ),
   ],
 );
-
-class AppNavigation {
-  static void goToMyPlants(BuildContext context) {
-    context.go('/my_plants');
-  }
-
-  static void goToWatering(BuildContext context) {
-    context.go('/watering');
-  }
-
-  static void goToFertilizers(BuildContext context) {
-    context.go('/fertilizers');
-  }
-
-  static void goToCareTips(BuildContext context) {
-    context.go('/care_tips');
-  }
-
-  static void goToPlantStatus(BuildContext context) {
-    context.go('/plant_status');
-  }
-
-  static void pushToPlantDetail(BuildContext context, {required String name, required String description}) {
-    context.push(
-      '/plant_detail?name=${Uri.encodeComponent(name)}&description=${Uri.encodeComponent(description)}',
-    );
-  }
-
-  static void goBack(BuildContext context) {
-    context.pop();
-  }
-}

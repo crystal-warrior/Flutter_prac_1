@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import '../models/plant_model.dart';
 
 class PlantFormScreen extends StatefulWidget {
   final void Function(String name, String type, int careComplexity) onSave;
@@ -39,11 +41,12 @@ class _PlantFormScreenState extends State<PlantFormScreen> {
     }
 
     widget.onSave(name, type, _careComplexity);
+    context.pop();
   }
 
-
   void _goBack() {
-    Navigator.pop(context);
+    widget.onCancel();
+    context.pop();
   }
 
   @override
