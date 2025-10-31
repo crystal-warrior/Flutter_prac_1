@@ -8,7 +8,7 @@ class MyPlantsScreen extends StatefulWidget {
 
 class _MyPlantsScreenState extends State<MyPlantsScreen> {
 
-  final String _imageUrl = "https://i.pinimg.com/736x/1e/c1/ae/1ec1ae3a7680e44dec7c1549468fbf62.jpg";
+  final String _imageUrl = "https://avatars.mds.yandex.net/i?id=d610e22a7fdf20c4ca2ea6b37f3340e8e89ba46b-4966461-images-thumbs&n=13";
 
   final List<Map<String, dynamic>> myPlants = [
     {'name': 'Кактус', 'days': 7, 'health': 'Хорошо'},
@@ -50,7 +50,7 @@ class _MyPlantsScreenState extends State<MyPlantsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Мои растения')),
+      appBar: AppBar(title: Text('Состояние')),
       body: Column(
         children: [
 
