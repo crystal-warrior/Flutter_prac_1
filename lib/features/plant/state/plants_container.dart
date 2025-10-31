@@ -23,25 +23,9 @@ class _PlantsContainerState extends State<PlantsContainer> {
     return sum / _plants.length;
   }
 
-  void _showList() {
-    setState(() => _currentScreen = Screen.list);
-  }
-
-  void _showForm() {
-    setState(() => _currentScreen = Screen.form);
-  }
-
-  void _addPlant(String name, String type, int careComplexity) {
-    final newPlant = PlantModel(
-      id: DateTime.now().microsecondsSinceEpoch.toString(),
-      name: name,
-      type: type,
-      careComplexity: careComplexity,
-    );
-
+  void _addPlant(PlantModel newPlant) {
     setState(() {
       _plants.add(newPlant);
-      _showList();
     });
   }
 
@@ -76,24 +60,25 @@ class _PlantsContainerState extends State<PlantsContainer> {
     }
   }
 
+  void _goBackToMainScreen() {
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
-    Widget body = _currentScreen == Screen.list
-        ? PlantsScreen(
-      plants: _plants,
-      averageComplexity: _averageComplexity,
-      onAdd: _showForm,
-      onRemove: _removePlant,
-    )
-        : PlantFormScreen(
-      onSave: _addPlant,
-      onCancel: _showList,
-    );
-
     return Scaffold(
-      body: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 300),
-        child: body,
+      appBar: AppBar(
+        title: Text('Мои Растения'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: _goBackToMainScreen,
+        ),
+      ),
+      body: PlantsScreen(
+        plants: _plants,
+        averageComplexity: _averageComplexity,
+        onAdd: _addPlant,
+        onRemove: _removePlant,
       ),
     );
   }

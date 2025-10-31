@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jhvostov_prac_1/shared/app_theme.dart';
 
-// Импортируем экраны
 import 'features/care_tips/screens/care_tips_screen.dart';
 import 'features/fertilizers/screens/fertilizer_screen.dart';
 import 'features/my_plants/screens/my_plants_screen.dart';
@@ -87,7 +86,6 @@ class _MainTabScreenState extends State<MainTabScreen> with SingleTickerProvider
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        //title: Text(_tabs[_tabController.index]['title']),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         bottom: TabBar(
           controller: _tabController,
@@ -101,7 +99,7 @@ class _MainTabScreenState extends State<MainTabScreen> with SingleTickerProvider
       ),
       body: TabBarView(
         controller: _tabController,
-        children: _tabs.map<Widget>((tab) => tab['widget']).toList(), // Явно указываем тип Widget
+        children: _tabs.map<Widget>((tab) => tab['widget']).toList(),
       ),
     );
   }

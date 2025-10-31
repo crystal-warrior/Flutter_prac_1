@@ -41,6 +41,11 @@ class _PlantFormScreenState extends State<PlantFormScreen> {
     widget.onSave(name, type, _careComplexity);
   }
 
+
+  void _goBack() {
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,7 +53,7 @@ class _PlantFormScreenState extends State<PlantFormScreen> {
         title: const Text('Добавить растение'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: widget.onCancel,
+          onPressed: _goBack,
         ),
         actions: [
           IconButton(
@@ -141,7 +146,7 @@ class _PlantFormScreenState extends State<PlantFormScreen> {
                 const SizedBox(width: 16),
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: widget.onCancel,
+                    onPressed: _goBack,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,
                       foregroundColor: Colors.white,
