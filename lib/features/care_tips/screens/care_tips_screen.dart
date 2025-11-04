@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class CareTipsScreen extends StatefulWidget {
+
   @override
   _CareTipsScreenState createState() => _CareTipsScreenState();
 }

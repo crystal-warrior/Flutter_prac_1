@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
-import 'autorization.dart';
-import 'features/care_tips/screens/care_tips_screen.dart';
-import 'features/fertilizers/screens/fertilizer_screen.dart';
-import 'features/my_plants/screens/my_plants_screen.dart';
-import 'features/plant/state/plants_container.dart';
-import 'features/watering/screens/watering_screen.dart';
+import 'package:go_router/go_router.dart';
 
 class GardenScreen extends StatefulWidget {
   const GardenScreen({super.key});
@@ -18,59 +13,41 @@ class _GardenScreenState extends State<GardenScreen> {
     {
       'title': 'Мои растения',
       'icon': Icons.favorite,
-      'screen': PlantsContainer(),
+      'route': '/garden/my_plants',
       'color': Colors.lightGreen,
     },
     {
       'title': 'Полив',
       'icon': Icons.water_drop,
-      'screen': WateringScreen(),
+      'route': '/garden/watering',
       'color': Colors.lightGreen,
     },
     {
       'title': 'Удобрения',
       'icon': Icons.agriculture,
-      'screen': FertilizerScreen(),
+      'route': '/garden/fertilizers',
       'color': Colors.lightGreen,
     },
     {
       'title': 'Советы по уходу',
       'icon': Icons.lightbulb,
-      'screen': CareTipsScreen(),
+      'route': '/garden/care_tips',
       'color': Colors.lightGreen,
     },
     {
       'title': 'Состояние растений',
       'icon': Icons.eco,
-      'screen': MyPlantsScreen(),
+      'route': '/garden/plant_status',
       'color': Colors.lightGreen,
     },
   ];
 
-  void _navigateToScreen(Widget screen, String title) {
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => Scaffold(
-        appBar: AppBar(
-          title: Text(title),
-          backgroundColor: Colors.lightGreen,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () => Navigator.pop(context),
-          ),
-        ),
-        body: screen,
-      )),
-    );
+  void _navigateToScreen(String route, String title) {
+    context.push(route);
   }
 
   void _logout() {
-
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const AuthorizationScreen()),
-    );
+    context.go('/auth');
   }
 
   @override
@@ -106,7 +83,7 @@ class _GardenScreenState extends State<GardenScreen> {
                 itemBuilder: (context, index) {
                   final screen = _screens[index];
                   return ElevatedButton(
-                    onPressed: () => _navigateToScreen(screen['screen'], screen['title']),
+                    onPressed: () => _navigateToScreen(screen['route'], screen['title']),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: screen['color'],
                       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),

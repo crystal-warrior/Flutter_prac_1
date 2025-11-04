@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'garden_screen.dart';
+import 'package:go_router/go_router.dart';
 
 class AuthorizationScreen extends StatelessWidget {
   const AuthorizationScreen({super.key});
@@ -33,7 +33,6 @@ class AuthorizationScreen extends StatelessWidget {
                   labelText: 'Логин',
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.person),
-
                 ),
               ),
               const SizedBox(height: 20),
@@ -49,10 +48,7 @@ class AuthorizationScreen extends StatelessWidget {
               ElevatedButton(
                 onPressed: () {
 
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const GardenScreen()),
-                  );
+                  context.go('/garden');
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.lightGreen,
