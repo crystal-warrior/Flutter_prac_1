@@ -50,7 +50,6 @@ class _MyPlantsScreenState extends State<MyPlantsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Мои растения')),
       body: Column(
         children: [
 
@@ -94,10 +93,10 @@ class _MyPlantsScreenState extends State<MyPlantsScreen> {
                       labelText: 'Название растения',
                       border: OutlineInputBorder(),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.green, width: 2.0),
+                        borderSide: BorderSide(color: Colors.lightGreen, width: 2.0),
                       ),
-                      focusColor: Colors.green,
-                      labelStyle: TextStyle(color: Colors.green),
+                      focusColor: Colors.lightGreen,
+                      labelStyle: TextStyle(color: Colors.lightGreen),
                     ),
                   ),
                   SizedBox(height: 10),
@@ -107,10 +106,10 @@ class _MyPlantsScreenState extends State<MyPlantsScreen> {
                       labelText: 'Дней до полива',
                       border: OutlineInputBorder(),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.green, width: 2.0),
+                        borderSide: BorderSide(color: Colors.lightGreen, width: 2.0),
                       ),
-                      focusColor: Colors.green,
-                      labelStyle: TextStyle(color: Colors.green),
+                      focusColor: Colors.lightGreen,
+                      labelStyle: TextStyle(color: Colors.lightGreen),
                     ),
                     keyboardType: TextInputType.number,
                   ),
@@ -121,10 +120,10 @@ class _MyPlantsScreenState extends State<MyPlantsScreen> {
                       labelText: 'Состояние растения',
                       border: OutlineInputBorder(),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.green, width: 2.0),
+                        borderSide: BorderSide(color: Colors.lightGreen, width: 2.0),
                       ),
-                      focusColor: Colors.green,
-                      labelStyle: TextStyle(color: Colors.green),
+                      focusColor: Colors.lightGreen,
+                      labelStyle: TextStyle(color: Colors.lightGreen),
                     ),
                   ),
                   SizedBox(height: 10),
@@ -133,7 +132,7 @@ class _MyPlantsScreenState extends State<MyPlantsScreen> {
                     icon: Icon(Icons.add),
                     label: Text('Добавить'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
+                      backgroundColor: Colors.lightGreen,
                       foregroundColor: Colors.white,
                     ),
                   ),
@@ -151,7 +150,7 @@ class _MyPlantsScreenState extends State<MyPlantsScreen> {
               itemCount: myPlants.length,
               separatorBuilder: (context, index) => Divider(
                 height: 20,
-                color: Colors.green[300],
+                color: Colors.lightGreen[300],
               ),
               itemBuilder: (context, index) {
                 return GestureDetector(
@@ -160,7 +159,7 @@ class _MyPlantsScreenState extends State<MyPlantsScreen> {
                   child: Card(
                     margin: EdgeInsets.all(8),
                     child: ListTile(
-                      leading: Icon(Icons.eco, color: Colors.green),
+                      leading: Icon(Icons.eco, color: Colors.lightGreen),
                       title: Text(myPlants[index]['name']),
                       subtitle: Text('Полив через: ${myPlants[index]['days']} дней'),
                       trailing: Row(
@@ -169,7 +168,7 @@ class _MyPlantsScreenState extends State<MyPlantsScreen> {
                           Chip(
                             label: Text(myPlants[index]['health']),
                             backgroundColor: myPlants[index]['health'] == 'Отлично'
-                                ? Colors.green
+                                ? Colors.lightGreen
                                 : myPlants[index]['health'] == 'Нужен полив'
                                 ? Colors.orange
                                 : Colors.blue,

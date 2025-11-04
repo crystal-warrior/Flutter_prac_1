@@ -46,7 +46,6 @@ class _FertilizerScreenState extends State<FertilizerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Удобрения')),
       body: Column(
         children: [
 
@@ -89,10 +88,10 @@ class _FertilizerScreenState extends State<FertilizerScreen> {
                       labelText: 'Название удобрения',
                       border: OutlineInputBorder(),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.green, width: 2.0),
+                        borderSide: BorderSide(color: Colors.lightGreen, width: 2.0),
                       ),
-                      focusColor: Colors.green,
-                      labelStyle: TextStyle(color: Colors.green),
+                      focusColor: Colors.lightGreen,
+                      labelStyle: TextStyle(color: Colors.lightGreen),
                     ),
                   ),
                   SizedBox(height: 10),
@@ -101,7 +100,7 @@ class _FertilizerScreenState extends State<FertilizerScreen> {
                     icon: Icon(Icons.add),
                     label: Text('Добавить'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
+                      backgroundColor: Colors.lightGreen,
                       foregroundColor: Colors.white,
                     ),
                   ),

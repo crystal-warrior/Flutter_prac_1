@@ -14,7 +14,7 @@ class _WateringScreenState extends State<WateringScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Полив растений')),
+
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

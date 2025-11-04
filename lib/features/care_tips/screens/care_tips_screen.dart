@@ -56,7 +56,6 @@ class _CareTipsScreenState extends State<CareTipsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Советы по уходу')),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,10 +99,10 @@ class _CareTipsScreenState extends State<CareTipsScreen> {
                         labelText: 'Название совета',
                         border: OutlineInputBorder(),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.green, width: 2.0),
+                          borderSide: BorderSide(color: Colors.lightGreen, width: 2.0),
                         ),
-                        focusColor: Colors.green,
-                        labelStyle: TextStyle(color: Colors.green),
+                        focusColor: Colors.lightGreen,
+                        labelStyle: TextStyle(color: Colors.lightGreen),
                       ),
                     ),
                     SizedBox(height: 10),
@@ -113,10 +112,10 @@ class _CareTipsScreenState extends State<CareTipsScreen> {
                         labelText: 'Текст совета',
                         border: OutlineInputBorder(),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.green, width: 2.0),
+                          borderSide: BorderSide(color: Colors.lightGreen, width: 2.0),
                         ),
-                        focusColor: Colors.green,
-                        labelStyle: TextStyle(color: Colors.green),
+                        focusColor: Colors.lightGreen,
+                        labelStyle: TextStyle(color: Colors.lightGreen),
                       ),
                       maxLines: 3,
                     ),
@@ -127,7 +126,7 @@ class _CareTipsScreenState extends State<CareTipsScreen> {
                         icon: Icon(Icons.add),
                         label: Text('Добавить совет'),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
+                          backgroundColor: Colors.lightGreen,
                           foregroundColor: Colors.white,
                         ),
                       ),
