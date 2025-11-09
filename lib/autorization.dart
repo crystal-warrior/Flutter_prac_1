@@ -1,5 +1,7 @@
+
 import 'package:flutter/material.dart';
-import 'app_router.dart';
+import 'package:go_router/go_router.dart';
+import 'di/service_locator.dart';
 
 class AuthorizationScreen extends StatelessWidget {
   final Function(String) setLogin;
@@ -31,9 +33,12 @@ class AuthorizationScreen extends StatelessWidget {
               onPressed: () {
                 final login = _controller.text.trim();
                 if (login.isNotEmpty) {
+
+                  locator<UserService>().setLogin(login);
+
                   setLogin(login);
 
-                  appRouter.go('/garden');
+                  context.go('/garden');
                 }
               },
               style: ElevatedButton.styleFrom(backgroundColor: Colors.lightGreen),

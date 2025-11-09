@@ -1,6 +1,8 @@
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'state/app_state.dart';
+import 'di/service_locator.dart';
 
 class GardenScreen extends StatelessWidget {
   final VoidCallback clearLogin;
@@ -14,11 +16,19 @@ class GardenScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final login = AppState.of(context).login ?? 'Гость';
+
+    //final loginFromInherited = AppState.of(context).login ?? 'Гость';
+
+
+    String loginFromGetIt = 'Гость';
+    if (locator.isRegistered<UserService>()) {
+      final userService = locator.get<UserService>();
+      loginFromGetIt = userService.login ?? 'Гость';
+    }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Привет, $login!'),
+        title: Text('Привет, $loginFromGetIt!'),
         backgroundColor: Colors.lightGreen,
         actions: [
           IconButton(
@@ -35,13 +45,19 @@ class GardenScreen extends StatelessWidget {
             const SizedBox(height: 20),
             const Text(
               'Добро пожаловать в ваш сад!',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 10),
             const Text(
               'Выберите раздел для управления вашими растениями:',
-              style: TextStyle(fontSize: 16, color: Colors.grey),
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey,
+              ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 30),
@@ -51,7 +67,6 @@ class GardenScreen extends StatelessWidget {
                 itemCount: 5,
                 separatorBuilder: (context, index) => const SizedBox(height: 12),
                 itemBuilder: (context, index) {
-
                   final List<Map<String, Object>> screens = [
                     {
                       'title': 'Мои растения',
@@ -81,8 +96,6 @@ class GardenScreen extends StatelessWidget {
                   ];
 
                   final screen = screens[index];
-
-                  // 🔸 Явно приводим типы
                   final String title = screen['title'] as String;
                   final IconData icon = screen['icon'] as IconData;
                   final String route = screen['route'] as String;
@@ -91,7 +104,10 @@ class GardenScreen extends StatelessWidget {
                     onPressed: () => context.push(route),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.lightGreen,
-                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 16,
+                        horizontal: 20,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
