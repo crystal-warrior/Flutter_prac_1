@@ -1,66 +1,45 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'app_router.dart';
 
 class AuthorizationScreen extends StatelessWidget {
-  const AuthorizationScreen({super.key});
+  final Function(String) setLogin;
+
+  const AuthorizationScreen({super.key, required this.setLogin});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Авторизация'),
-        backgroundColor: Colors.lightGreen,
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(
-                Icons.eco,
-                size: 100,
-                color: Colors.lightGreen,
-              ),
-              const SizedBox(height: 30),
-              const Text(
-                'Мой Сад',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 30),
-              const TextField(
-                decoration: InputDecoration(
-                  labelText: 'Логин',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.person),
-                ),
-              ),
-              const SizedBox(height: 20),
-              const TextField(
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: 'Пароль',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.lock),
-                ),
-              ),
-              const SizedBox(height: 30),
-              ElevatedButton(
-                onPressed: () {
+    final TextEditingController _controller = TextEditingController();
 
-                  context.go('/garden');
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.lightGreen,
-                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                ),
-                child: const Text(
-                  'Войти в сад',
-                  style: TextStyle(fontSize: 18, color: Colors.white),
-                ),
+    return Scaffold(
+      appBar: AppBar(title: const Text('Авторизация'), backgroundColor: Colors.lightGreen),
+      body: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('Введите ваш логин', style: TextStyle(fontSize: 18)),
+            const SizedBox(height: 20),
+            TextField(
+              controller: _controller,
+              decoration: const InputDecoration(
+                labelText: 'Логин',
+                border: OutlineInputBorder(),
               ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 30),
+            ElevatedButton(
+              onPressed: () {
+                final login = _controller.text.trim();
+                if (login.isNotEmpty) {
+                  setLogin(login);
+
+                  appRouter.go('/garden');
+                }
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.lightGreen),
+              child: const Text('Войти'),
+            ),
+          ],
         ),
       ),
     );

@@ -1,61 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'state/app_state.dart';
 
-class GardenScreen extends StatefulWidget {
-  const GardenScreen({super.key});
+class GardenScreen extends StatelessWidget {
+  final VoidCallback clearLogin;
 
-  @override
-  _GardenScreenState createState() => _GardenScreenState();
-}
+  const GardenScreen({super.key, required this.clearLogin});
 
-class _GardenScreenState extends State<GardenScreen> {
-  final List<Map<String, dynamic>> _screens = [
-    {
-      'title': 'Мои растения',
-      'icon': Icons.favorite,
-      'route': '/garden/my_plants',
-      'color': Colors.lightGreen,
-    },
-    {
-      'title': 'Полив',
-      'icon': Icons.water_drop,
-      'route': '/garden/watering',
-      'color': Colors.lightGreen,
-    },
-    {
-      'title': 'Удобрения',
-      'icon': Icons.agriculture,
-      'route': '/garden/fertilizers',
-      'color': Colors.lightGreen,
-    },
-    {
-      'title': 'Советы по уходу',
-      'icon': Icons.lightbulb,
-      'route': '/garden/care_tips',
-      'color': Colors.lightGreen,
-    },
-    {
-      'title': 'Состояние растений',
-      'icon': Icons.eco,
-      'route': '/garden/plant_status',
-      'color': Colors.lightGreen,
-    },
-  ];
-
-  void _navigateToScreen(String route, String title) {
-    context.push(route);
-  }
-
-  void _logout() {
+  void _logout(BuildContext context) {
+    clearLogin();
     context.go('/auth');
   }
 
   @override
   Widget build(BuildContext context) {
+    final login = AppState.of(context).login ?? 'Гость';
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Главный экран'),
+        title: Text('Привет, $login!'),
         backgroundColor: Colors.lightGreen,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () => _logout(context),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -78,14 +48,49 @@ class _GardenScreenState extends State<GardenScreen> {
 
             Expanded(
               child: ListView.separated(
-                itemCount: _screens.length,
+                itemCount: 5,
                 separatorBuilder: (context, index) => const SizedBox(height: 12),
                 itemBuilder: (context, index) {
-                  final screen = _screens[index];
+
+                  final List<Map<String, Object>> screens = [
+                    {
+                      'title': 'Мои растения',
+                      'icon': Icons.favorite,
+                      'route': '/garden/my_plants'
+                    },
+                    {
+                      'title': 'Полив',
+                      'icon': Icons.water_drop,
+                      'route': '/garden/watering'
+                    },
+                    {
+                      'title': 'Удобрения',
+                      'icon': Icons.agriculture,
+                      'route': '/garden/fertilizers'
+                    },
+                    {
+                      'title': 'Советы по уходу',
+                      'icon': Icons.lightbulb,
+                      'route': '/garden/care_tips'
+                    },
+                    {
+                      'title': 'Состояние растений',
+                      'icon': Icons.eco,
+                      'route': '/garden/plant_status'
+                    },
+                  ];
+
+                  final screen = screens[index];
+
+                  // 🔸 Явно приводим типы
+                  final String title = screen['title'] as String;
+                  final IconData icon = screen['icon'] as IconData;
+                  final String route = screen['route'] as String;
+
                   return ElevatedButton(
-                    onPressed: () => _navigateToScreen(screen['route'], screen['title']),
+                    onPressed: () => context.push(route),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: screen['color'],
+                      backgroundColor: Colors.lightGreen,
                       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -93,10 +98,10 @@ class _GardenScreenState extends State<GardenScreen> {
                     ),
                     child: Row(
                       children: [
-                        Icon(screen['icon'], color: Colors.white, size: 28),
+                        Icon(icon, color: Colors.white, size: 28),
                         const SizedBox(width: 16),
                         Text(
-                          screen['title'],
+                          title,
                           style: const TextStyle(
                             fontSize: 18,
                             color: Colors.white,
@@ -104,23 +109,26 @@ class _GardenScreenState extends State<GardenScreen> {
                           ),
                         ),
                         const Spacer(),
-                        const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 20),
+                        const Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.white,
+                          size: 20,
+                        ),
                       ],
                     ),
                   );
                 },
               ),
             ),
-
             const SizedBox(height: 20),
             OutlinedButton(
-              onPressed: _logout,
+              onPressed: () => _logout(context),
               style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
+                side: const BorderSide(color: Colors.red),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                side: const BorderSide(color: Colors.red),
               ),
               child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -130,7 +138,6 @@ class _GardenScreenState extends State<GardenScreen> {
                   Text(
                     'Выйти из приложения',
                     style: TextStyle(
-                      fontSize: 16,
                       color: Colors.red,
                       fontWeight: FontWeight.w500,
                     ),

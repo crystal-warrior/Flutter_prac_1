@@ -1,23 +1,49 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'shared/app_theme.dart';
 import 'app_router.dart';
+import 'state/app_state.dart';
+import 'app_router.dart' as router;
 
 void main() {
-  runApp(PlantApp());
+  runApp(const PlantApp());
 }
 
-class PlantApp extends StatelessWidget {
-  PlantApp({super.key});
+class PlantApp extends StatefulWidget {
+  const PlantApp({super.key});
 
-  final GoRouter _router = appRouter;
+  @override
+  State<PlantApp> createState() => _PlantAppState();
+}
+
+class _PlantAppState extends State<PlantApp> {
+  String? _login;
+
+  void setLogin(String login) {
+    setState(() {
+      _login = login;
+    });
+  }
+
+  void clearLogin() {
+    setState(() {
+      _login = null;
+    });
+  }
+
+  @override
+  void initState() {
+    router.initRouter(setLogin, clearLogin);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'Мой Сад',
-      theme: AppTheme.lightTheme,
-      routerConfig: _router,
+    return AppState(
+      login: _login,
+      child: MaterialApp.router(
+        routerConfig: router.appRouter,
+        title: 'Мой Сад',
+        theme: ThemeData(useMaterial3: true, colorScheme: ColorScheme.fromSeed(seedColor: Colors.green)),
+      ),
     );
   }
 }
