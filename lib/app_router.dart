@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'autorization.dart';
+import 'package:jhvostov_prac_1/features/watering/cubit/watering_cubit.dart';
+import 'features/authorization/autorization.dart';
 import 'garden_screen.dart';
 import 'features/care_tips/screens/care_tips_screen.dart';
 import 'features/fertilizers/screens/fertilizer_screen.dart';
@@ -53,6 +55,18 @@ void initRouter() {
             name: 'watering',
             pageBuilder: (context, state) => MaterialPage(
               key: state.pageKey,
+              child: BlocProvider(
+                create: (context) => WateringCubit(),
+                child: const WateringScreen(),
+              ),
+            ),
+          ),
+          /*
+          GoRoute(
+            path: 'watering',
+            name: 'watering',
+            pageBuilder: (context, state) => MaterialPage(
+              key: state.pageKey,
               child: Scaffold(
                 appBar: AppBar(
                   title: const Text('Полив'),
@@ -66,6 +80,7 @@ void initRouter() {
               ),
             ),
           ),
+           */
           GoRoute(
             path: 'fertilizers',
             name: 'fertilizers',
