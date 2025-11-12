@@ -1,12 +1,12 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:jhvostov_prac_1/auth/cubit/auth_cubit.dart';
 import 'di/service_locator.dart';
 
 class AuthorizationScreen extends StatelessWidget {
-  final Function(String) setLogin;
-
-  const AuthorizationScreen({super.key, required this.setLogin});
+  const AuthorizationScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +34,11 @@ class AuthorizationScreen extends StatelessWidget {
                 final login = _controller.text.trim();
                 if (login.isNotEmpty) {
 
-                  locator<UserService>().setLogin(login);
+                 // locator<UserService>().setLogin(login);
 
-                  setLogin(login);
+
+                  context.read<AuthCubit>().setLogin(login);
+
 
                   context.go('/garden');
                 }

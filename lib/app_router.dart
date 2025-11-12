@@ -8,11 +8,9 @@ import 'features/my_plants/screens/my_plants_screen.dart';
 import 'features/plant/state/plants_container.dart';
 import 'features/watering/screens/watering_screen.dart';
 
-
 late GoRouter appRouter;
 
-
-void initRouter(Function(String) setLogin, VoidCallback clearLogin) {
+void initRouter() {
   appRouter = GoRouter(
     initialLocation: '/auth',
     routes: [
@@ -21,7 +19,7 @@ void initRouter(Function(String) setLogin, VoidCallback clearLogin) {
         name: 'auth',
         pageBuilder: (context, state) => MaterialPage(
           key: state.pageKey,
-          child: AuthorizationScreen(setLogin: setLogin),
+          child: const AuthorizationScreen(),
         ),
       ),
       GoRoute(
@@ -29,7 +27,7 @@ void initRouter(Function(String) setLogin, VoidCallback clearLogin) {
         name: 'garden',
         pageBuilder: (context, state) => MaterialPage(
           key: state.pageKey,
-          child: GardenScreen(clearLogin: clearLogin),
+          child: GardenScreen(),
         ),
         routes: [
           GoRoute(

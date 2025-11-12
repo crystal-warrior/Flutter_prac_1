@@ -1,52 +1,29 @@
 
 import 'package:flutter/material.dart';
-import 'app_router.dart';
-import 'state/app_state.dart';
-import 'di/service_locator.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jhvostov_prac_1/app_router.dart';
+import 'bloc_observer.dart';
+import 'auth/cubit/auth_cubit.dart';
 
 void main() {
-  setupLocator();
-  runApp(const PlantApp());
+  Bloc.observer = AppBlocObserver();
+
+  initRouter();
+
+  runApp(const MyApp());
 }
 
-class PlantApp extends StatefulWidget {
-  const PlantApp({super.key});
-
-  @override
-  State<PlantApp> createState() => _PlantAppState();
-}
-
-class _PlantAppState extends State<PlantApp> {
-  String? _login;
-
-  void setLogin(String login) {
-    locator.get<UserService>().setLogin(login);
-    setState(() {
-      _login = login;
-    });
-  }
-
-  void clearLogin() {
-    locator.get<UserService>().clearLogin();
-    setState(() {
-      _login = null;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    initRouter(setLogin, clearLogin);
-  }
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return AppState(
-      login: _login,
+    return BlocProvider(
+      create: (context) => AuthCubit(),
       child: MaterialApp.router(
-        title: 'Мой Сад',
-        theme: ThemeData(useMaterial3: true, colorScheme: ColorScheme.fromSeed(seedColor: Colors.green)),
         routerConfig: appRouter,
+        title: 'My Plants',
+        theme: ThemeData(primarySwatch: Colors.green),
       ),
     );
   }

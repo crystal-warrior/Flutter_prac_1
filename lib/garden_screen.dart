@@ -1,39 +1,29 @@
-
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'state/app_state.dart';
-import 'di/service_locator.dart';
+import 'auth/cubit/auth_cubit.dart';
 
 class GardenScreen extends StatelessWidget {
-  final VoidCallback clearLogin;
-
-  const GardenScreen({super.key, required this.clearLogin});
-
-  void _logout(BuildContext context) {
-    clearLogin();
-    context.go('/auth');
-  }
+  const GardenScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-
-    //final loginFromInherited = AppState.of(context).login ?? 'Гость';
-
-
-    String loginFromGetIt = 'Гость';
-    if (locator.isRegistered<UserService>()) {
-      final userService = locator.get<UserService>();
-      loginFromGetIt = userService.login ?? 'Гость';
-    }
-
     return Scaffold(
       appBar: AppBar(
-        title: Text('Привет, $loginFromGetIt!'),
+        title: BlocBuilder<AuthCubit, AuthState>(
+          builder: (context, state) {
+            final login = state.login ?? 'Гость';
+            return Text('Привет, $login!');
+          },
+        ),
         backgroundColor: Colors.lightGreen,
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: () => _logout(context),
+            onPressed: () {
+              context.read<AuthCubit>().logout();
+              context.go('/auth');
+            },
           ),
         ],
       ),
@@ -138,7 +128,10 @@ class GardenScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             OutlinedButton(
-              onPressed: () => _logout(context),
+              onPressed: () {
+                context.read<AuthCubit>().logout();
+                context.go('/auth');
+              },
               style: OutlinedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 side: const BorderSide(color: Colors.red),
@@ -150,7 +143,7 @@ class GardenScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.logout, color: Colors.red),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   Text(
                     'Выйти из приложения',
                     style: TextStyle(

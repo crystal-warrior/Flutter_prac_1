@@ -15,10 +15,13 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.8
+  flutter_bloc: ^8.1.5
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  bloc_test: ^9.1.7
+  mocktail: ^1.0.0
 
 
   flutter_lints: ^5.0.0
