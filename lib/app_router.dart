@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:jhvostov_prac_1/features/care_tips/cubit/care_tips_cubit.dart';
 import 'package:jhvostov_prac_1/features/fertilizers/cubit/fertilizers_cubit.dart';
 import 'package:jhvostov_prac_1/features/watering/cubit/watering_cubit.dart';
 import 'features/authorization/autorization.dart';
@@ -115,6 +116,19 @@ void initRouter() {
           ),
 
            */
+
+          GoRoute(
+            path: 'care_tips',
+            name: 'care_tips',
+            pageBuilder: (context, state) => MaterialPage(
+              key: state.pageKey,
+              child: BlocProvider(
+                create: (context) => CareTipsCubit(),
+                child: const CareTipsScreen(),
+              ),
+            ),
+          ),
+          /*
           GoRoute(
             path: 'care_tips',
             name: 'care_tips',
@@ -133,6 +147,8 @@ void initRouter() {
               ),
             ),
           ),
+
+           */
           GoRoute(
             path: 'plant_status',
             name: 'plant_status',
