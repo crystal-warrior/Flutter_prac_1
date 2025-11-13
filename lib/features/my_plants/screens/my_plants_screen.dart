@@ -1,198 +1,162 @@
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../cubit/my_plants_cubit.dart';
 
-class MyPlantsScreen extends StatefulWidget {
-  @override
-  _MyPlantsScreenState createState() => _MyPlantsScreenState();
-}
-
-class _MyPlantsScreenState extends State<MyPlantsScreen> {
-
-  final String _imageUrl = "https://avatars.mds.yandex.net/i?id=d610e22a7fdf20c4ca2ea6b37f3340e8e89ba46b-4966461-images-thumbs&n=13";
-
-  final List<Map<String, dynamic>> myPlants = [
-    {'name': 'Кактус', 'days': 7, 'health': 'Хорошо'},
-    {'name': 'Фикус', 'days': 3, 'health': 'Отлично'},
-    {'name': 'Роза', 'days': 1, 'health': 'Нужен полив'},
-  ];
-
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _daysController = TextEditingController();
-  final TextEditingController _healthController = TextEditingController();
-
-  void _addNewPlant() {
-    if (_nameController.text.isNotEmpty && _daysController.text.isNotEmpty && _healthController.text.isNotEmpty) {
-      setState(() {
-        myPlants.add({
-          'name': _nameController.text,
-          'days': int.tryParse(_daysController.text) ?? 0,
-          'health': _healthController.text,
-        });
-      });
-      _nameController.clear();
-      _daysController.clear();
-      _healthController.clear();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Растение добавлено!')),
-      );
-    }
-  }
-
-  void _removePlant(int index) {
-    setState(() {
-      myPlants.removeAt(index);
-    });
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Растение удалено!')),
-    );
-  }
+class MyPlantsScreen extends StatelessWidget {
+  const MyPlantsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
+    final _nameController = TextEditingController();
+    final _daysController = TextEditingController();
 
-          Center(
-            child:
-            SizedBox(
-              width: 210,
-              height: 210,
-              child: CachedNetworkImage(
-                imageUrl: _imageUrl,
-                progressIndicatorBuilder: (context, url, progress) =>
-                const CircularProgressIndicator(),
-                errorWidget: (context, url, error) => const Center(
-                  child: Icon(
-                    Icons.error,
-                    color: Colors.red,
-                    size: 50,
+    final String imageUrl = "https://avatars.mds.yandex.net/i?id=d610e22a7fdf20c4ca2ea6b37f3340e8e89ba46b-4966461-images-thumbs&n=13";
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Состояние растений'),
+        backgroundColor: Colors.lightGreen,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.pop(),
+        ),
+      ),
+      body: BlocBuilder<MyPlantsCubit, MyPlantsState>(
+        builder: (context, state) {
+          return Column(
+            children: [
+              Center(
+                child: SizedBox(
+                  width: 210,
+                  height: 210,
+                  child: CachedNetworkImage(
+                    imageUrl: imageUrl,
+                    progressIndicatorBuilder: (context, url, progress) =>
+                    const CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => const Icon(
+                      Icons.error,
+                      color: Colors.red,
+                      size: 50,
+                    ),
+                    fit: BoxFit.contain,
                   ),
                 ),
-                fit: BoxFit.contain,
               ),
-            ),
-          ),
-
-
-
-
-
-          Card(
-            margin: EdgeInsets.all(16),
-            child: Padding(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  Text('Добавить растение',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  SizedBox(height: 10),
-                  TextField(
-                    controller: _nameController,
-                    decoration: InputDecoration(
-                      labelText: 'Название растения',
-                      border: OutlineInputBorder(),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.lightGreen, width: 2.0),
+              Card(
+                margin: const EdgeInsets.all(16),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      const Text(
+                        'Добавить растение',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
-                      focusColor: Colors.lightGreen,
-                      labelStyle: TextStyle(color: Colors.lightGreen),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  TextField(
-                    controller: _daysController,
-                    decoration: InputDecoration(
-                      labelText: 'Дней до полива',
-                      border: OutlineInputBorder(),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.lightGreen, width: 2.0),
-                      ),
-                      focusColor: Colors.lightGreen,
-                      labelStyle: TextStyle(color: Colors.lightGreen),
-                    ),
-                    keyboardType: TextInputType.number,
-                  ),
-                  SizedBox(height: 10),
-                  TextField(
-                    controller: _healthController,
-                    decoration: InputDecoration(
-                      labelText: 'Состояние растения',
-                      border: OutlineInputBorder(),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.lightGreen, width: 2.0),
-                      ),
-                      focusColor: Colors.lightGreen,
-                      labelStyle: TextStyle(color: Colors.lightGreen),
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  ElevatedButton.icon(
-                    onPressed: _addNewPlant,
-                    icon: Icon(Icons.add),
-                    label: Text('Добавить'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.lightGreen,
-                      foregroundColor: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(16),
-            child: Text('Ваши растения:',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          ),
-          Expanded(
-            child: ListView.separated(
-              itemCount: myPlants.length,
-              separatorBuilder: (context, index) => Divider(
-                height: 20,
-                color: Colors.lightGreen[300],
-              ),
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  key: ValueKey('myplant_${myPlants[index]['name']}_$index'),
-                  onTap: () => _removePlant(index),
-                  child: Card(
-                    margin: EdgeInsets.all(8),
-                    child: ListTile(
-                      leading: Icon(Icons.eco, color: Colors.lightGreen),
-                      title: Text(myPlants[index]['name']),
-                      subtitle: Text('Полив через: ${myPlants[index]['days']} дней'),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Chip(
-                            label: Text(myPlants[index]['health']),
-                            backgroundColor: myPlants[index]['health'] == 'Отлично'
-                                ? Colors.lightGreen
-                                : myPlants[index]['health'] == 'Нужен полив'
-                                ? Colors.orange
-                                : Colors.blue,
+                      const SizedBox(height: 10),
+                      TextField(
+                        controller: _nameController,
+                        decoration: InputDecoration(
+                          labelText: 'Название растения',
+                          border: const OutlineInputBorder(),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.lightGreen, width: 2.0),
                           ),
-                          SizedBox(width: 8),
-                          Icon(Icons.delete_outline, color: Colors.red),
-                        ],
+                          labelStyle: const TextStyle(color: Colors.lightGreen),
+                        ),
                       ),
-                    ),
+                      const SizedBox(height: 10),
+                      TextField(
+                        controller: _daysController,
+                        decoration: InputDecoration(
+                          labelText: 'Дней до полива',
+                          border: const OutlineInputBorder(),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(color: Colors.lightGreen, width: 2.0),
+                          ),
+                          labelStyle: const TextStyle(color: Colors.lightGreen),
+                        ),
+                        keyboardType: TextInputType.number,
+                      ),
+                      const SizedBox(height: 10),
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          final name = _nameController.text;
+                          final days = _daysController.text;
+                          if (name.trim().isNotEmpty && days.trim().isNotEmpty) {
+                            context.read<MyPlantsCubit>().addPlant(name, days);
+                            _nameController.clear();
+                            _daysController.clear();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Растение добавлено!')),
+                            );
+                          }
+                        },
+                        icon: const Icon(Icons.add),
+                        label: const Text('Добавить'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.lightGreen,
+                          foregroundColor: Colors.white,
+                        ),
+                      ),
+                    ],
                   ),
-                );
-              },
-            ),
-          ),
-        ],
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.all(16),
+                child: Text(
+                  'Ваши растения:',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Expanded(
+                child: ListView.separated(
+                  itemCount: state.plants.length,
+                  separatorBuilder: (context, index) => Divider(
+                    height: 20,
+                    color: Colors.lightGreen[300],
+                  ),
+                  itemBuilder: (context, index) {
+                    final plant = state.plants[index];
+                    return GestureDetector(
+                      key: ValueKey('myplant_${plant.name}_$index'),
+                      onTap: () {
+                        context.read<MyPlantsCubit>().removePlant(index);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Растение удалено!')),
+                        );
+                      },
+                      child: Card(
+                        margin: const EdgeInsets.all(8),
+                        child: ListTile(
+                          leading: const Icon(Icons.eco, color: Colors.lightGreen),
+                          title: Text(plant.name),
+                          subtitle: Text('Полив через: ${plant.daysUntilWatering} дней'),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Chip(
+                                label: Text(plant.health),
+                                backgroundColor: plant.healthColor,
+                                labelStyle: const TextStyle(color: Colors.black),
+                              ),
+                              const SizedBox(width: 8),
+                              const Icon(Icons.delete_outline, color: Colors.red),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _daysController.dispose();
-    _healthController.dispose();
-    super.dispose();
   }
 }

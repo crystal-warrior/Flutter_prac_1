@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jhvostov_prac_1/features/care_tips/cubit/care_tips_cubit.dart';
 import 'package:jhvostov_prac_1/features/fertilizers/cubit/fertilizers_cubit.dart';
+import 'package:jhvostov_prac_1/features/my_plants/cubit/my_plants_cubit.dart';
 import 'package:jhvostov_prac_1/features/watering/cubit/watering_cubit.dart';
 import 'features/authorization/autorization.dart';
 import 'garden_screen.dart';
@@ -149,6 +150,20 @@ void initRouter() {
           ),
 
            */
+
+          GoRoute(
+            path: 'plant_status',
+            name: 'plant_status',
+            pageBuilder: (context, state) => MaterialPage(
+              key: state.pageKey,
+              child: BlocProvider(
+                create: (context) => MyPlantsCubit(),
+                child: const MyPlantsScreen(),
+              ),
+            ),
+          ),
+
+          /*
           GoRoute(
             path: 'plant_status',
             name: 'plant_status',
@@ -167,8 +182,15 @@ void initRouter() {
               ),
             ),
           ),
+
+           */
+
+
         ],
       ),
+
+
+
       GoRoute(path: '/', redirect: (context, state) => '/auth'),
     ],
     errorPageBuilder: (context, state) => MaterialPage(
