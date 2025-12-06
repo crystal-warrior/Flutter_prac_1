@@ -2,6 +2,17 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   static final lightTheme = ThemeData(
+
+    scaffoldBackgroundColor: Colors.white,
+
+    textSelectionTheme: TextSelectionThemeData(
+      cursorColor: Colors.lightGreen, //
+      selectionColor: Colors.lightGreen.withOpacity(0.3), // цвет выделения
+      selectionHandleColor: Colors.lightGreen, // цвет ручек выделения
+    ),
+
+
+
     primarySwatch: Colors.lightGreen,
     colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightGreen),
     useMaterial3: true,
@@ -36,6 +47,8 @@ class AppTheme {
     ),
 
     inputDecorationTheme: InputDecorationTheme(
+
+
       border: const OutlineInputBorder(
         borderSide: BorderSide(color: Colors.lightGreen),
         borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -52,6 +65,12 @@ class AppTheme {
       floatingLabelStyle: const TextStyle(color: Colors.lightGreen),
       hintStyle: const TextStyle(color: Colors.grey),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+
+
+
+
+
+
     ),
   );
 

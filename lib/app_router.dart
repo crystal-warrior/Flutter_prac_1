@@ -4,8 +4,12 @@ import 'package:go_router/go_router.dart';
 import 'package:jhvostov_prac_1/features/care_tips/cubit/care_tips_cubit.dart';
 import 'package:jhvostov_prac_1/features/fertilizers/cubit/fertilizers_cubit.dart';
 import 'package:jhvostov_prac_1/features/my_plants/cubit/my_plants_cubit.dart';
+import 'package:jhvostov_prac_1/features/planting_calendar/screens/planting_calendar_screen.dart';
+import 'package:jhvostov_prac_1/features/profile/screens/profile_screen.dart';
+import 'package:jhvostov_prac_1/features/recommended_plants/screens/recommended_plants_screen.dart';
+import 'package:jhvostov_prac_1/features/registration/screens/registration_screen.dart';
 import 'package:jhvostov_prac_1/features/watering/cubit/watering_cubit.dart';
-import 'features/authorization/autorization.dart';
+import 'features/authorization/screens/autorization_screen.dart';
 import 'garden_screen.dart';
 import 'features/care_tips/screens/care_tips_screen.dart';
 import 'features/fertilizers/screens/fertilizer_screen.dart';
@@ -25,6 +29,23 @@ void initRouter() {
         pageBuilder: (context, state) => MaterialPage(
           key: state.pageKey,
           child: const AuthorizationScreen(),
+        ),
+      ),
+      GoRoute(
+        path: '/register',
+        name: 'register',
+        pageBuilder: (context, state) => MaterialPage(
+          key: state.pageKey,
+          child: const RegistrationScreen(),
+        ),
+      ),
+
+      GoRoute(
+        path: '/profile',
+        name: 'profile',
+        pageBuilder: (context, state) => MaterialPage(
+          key: state.pageKey,
+          child: const ProfileScreen(),
         ),
       ),
       GoRoute(
@@ -64,6 +85,24 @@ void initRouter() {
               ),
             ),
           ),
+
+          GoRoute(
+            path: 'planting_calendar',
+            name: 'planting_calendar',
+            pageBuilder: (context, state) => MaterialPage(
+              key: state.pageKey,
+              child: const PlantingCalendarScreen(),
+            ),
+          ),
+          GoRoute(
+            path: 'recommended_plants',
+            name: 'recommended_plants',
+            pageBuilder: (context, state) => MaterialPage(
+              key: state.pageKey,
+              child: const RecommendedPlantsScreen(),
+            ),
+          ),
+
           /*
           GoRoute(
             path: 'watering',
