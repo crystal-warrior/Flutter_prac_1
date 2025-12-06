@@ -14,10 +14,15 @@ class WateringScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Полив'),
+        title: const Text('Регуляция полива'),
+        titleTextStyle: const TextStyle(
+          color: Colors.white,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
         backgroundColor: Colors.lightGreen,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => context.pop(),
         ),
       ),
@@ -59,7 +64,8 @@ class WateringScreen extends StatelessWidget {
                   },
                 ),
                 const SizedBox(height: 20),
-                const Text('Регулируйте уровень полива растений'),
+                const Text('Регулируйте уровень полива растений удаленно!'),
+
               ],
             ),
           );

@@ -1,168 +1,136 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:jhvostov_prac_1/features/care_tips/screens/add_tip_dialog.dart';
 import '../cubit/care_tips_cubit.dart';
-
 
 class CareTipsScreen extends StatelessWidget {
   const CareTipsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final _titleController = TextEditingController();
-    final _tipController = TextEditingController();
-
     final String imageUrl = "https://static.tildacdn.com/tild6438-6539-4066-a439-663263363239/free-icon-grow-plant.png";
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Советы по уходу'),
+        titleTextStyle: const TextStyle(
+          color: Colors.white,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
         backgroundColor: Colors.lightGreen,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => context.pop(),
         ),
+
       ),
       body: BlocBuilder<CareTipsCubit, CareTipsState>(
         builder: (context, state) {
-          return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: SizedBox(
-                    width: 210,
-                    height: 210,
-                    child: CachedNetworkImage(
-                      imageUrl: imageUrl,
-                      progressIndicatorBuilder: (context, url, progress) =>
-                      const CircularProgressIndicator(),
-                      errorWidget: (context, url, error) => const Icon(
-                        Icons.error,
-                        color: Colors.red,
-                        size: 50,
-                      ),
-                      fit: BoxFit.contain,
+          return Column(
+            //crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: SizedBox(
+                  width: 210,
+                  height: 210,
+                  child: CachedNetworkImage(
+                    imageUrl: imageUrl,
+                    progressIndicatorBuilder: (context, url, progress) =>
+                    const CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => const Icon(
+                      Icons.error,
+                      color: Colors.red,
+                      size: 50,
                     ),
+                    fit: BoxFit.contain,
                   ),
                 ),
-                Card(
-                  margin: const EdgeInsets.all(15),
-                  child: Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Добавить новый совет',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 10),
-                        TextField(
-                          controller: _titleController,
-                          decoration: InputDecoration(
-                            labelText: 'Название совета',
-                            border: const OutlineInputBorder(),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(color: Colors.lightGreen, width: 2.0),
-                            ),
-                            labelStyle: const TextStyle(color: Colors.lightGreen),
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        TextField(
-                          controller: _tipController,
-                          decoration: InputDecoration(
-                            labelText: 'Текст совета',
-                            border: const OutlineInputBorder(),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(color: Colors.lightGreen, width: 2.0),
-                            ),
-                            labelStyle: const TextStyle(color: Colors.lightGreen),
-                          ),
-                          maxLines: 3,
-                        ),
-                        const SizedBox(height: 10),
-                        Center(
-                          child: ElevatedButton.icon(
-                            onPressed: () {
-                              final title = _titleController.text;
-                              final tip = _tipController.text;
-                              if (title.trim().isNotEmpty && tip.trim().isNotEmpty) {
-                                context.read<CareTipsCubit>().addTip(title, tip);
-                                _titleController.clear();
-                                _tipController.clear();
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Совет добавлен!')),
-                                );
-                              }
-                            },
-                            icon: const Icon(Icons.add),
-                            label: const Text('Добавить совет'),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.lightGreen,
-                              foregroundColor: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Text(
+                  'Ваши советы по уходу за растениями!',
+                  style: TextStyle(fontSize: 15, color: Colors.grey),
+                  textAlign: TextAlign.center,
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
+              ),
+              const Padding(
+                padding: EdgeInsets.all(16),
+                child: Text(
+                  'Список советов',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Expanded(
+                child: state.tips.isEmpty
+                    ? const Center(
                   child: Text(
-                    'Советы по уходу:',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    'Советов пока нет.\nНажмите +, чтобы добавить первый!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.grey),
                   ),
-                ),
-                const SizedBox(height: 10),
-                for (int i = 0; i < state.tips.length; i++)
-                  GestureDetector(
-                    key: ValueKey('tip_${state.tips[i].title}_$i'),
-                    onTap: () {
-                      context.read<CareTipsCubit>().removeTip(i);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Совет удален!')),
-                      );
-                    },
-                    child: Card(
-                      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                      child: Padding(
-                        padding: const EdgeInsets.all(15),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    state.tips[i].title,
-                                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                const Icon(Icons.delete_outline, color: Colors.red, size: 20),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-                            Text(state.tips[i].tip),
-                            const SizedBox(height: 5),
-                            const Text(
-                              'Нажмите для удаления',
-                              style: TextStyle(fontSize: 10, color: Colors.red),
-                            ),
-                          ],
+                )
+                    : ListView.separated(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: state.tips.length,
+                  separatorBuilder: (context, index) => const SizedBox(height: 8),
+                  itemBuilder: (context, index) {
+                    final tip = state.tips[index];
+                    return Dismissible(
+                      key: ValueKey('tip_${tip.title}_$index'),
+                      direction: DismissDirection.startToEnd,
+                      background: Container(
+                        color: Colors.red,
+                        alignment: Alignment.centerLeft,
+                        padding: const EdgeInsets.only(left: 20),
+                        child: const Icon(Icons.delete, color: Colors.white),
+                      ),
+                      onDismissed: (direction) {
+                        context.read<CareTipsCubit>().removeTip(index);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Совет удалён')),
+                        );
+                      },
+                      child: Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                tip.title,
+                                style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(height: 6),
+                              Text(tip.tip),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-              ],
-            ),
+                    );
+                  },
+                ),
+              ),
+            ],
           );
         },
+      ),
+
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.lightGreen,
+        foregroundColor: Colors.white,
+        onPressed: () {
+          // Получаем cubit из текущего контекста и передаём его в диалог
+          final cubit = context.read<CareTipsCubit>();
+          showDialog(
+            context: context,
+            builder: (context) => AddTipDialog(cubit: cubit),
+          );
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }

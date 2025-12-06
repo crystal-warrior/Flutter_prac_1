@@ -1,14 +1,12 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:jhvostov_prac_1/features/fertilizers/screens/add_fertilizer_dialog.dart';
 import '../cubit/fertilizers_cubit.dart';
 
 class FertilizerScreen extends StatelessWidget {
-  FertilizerScreen({super.key});
-
-  final TextEditingController _controller = TextEditingController();
+  const FertilizerScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,9 +15,14 @@ class FertilizerScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Удобрения'),
+        titleTextStyle: const TextStyle(
+          color: Colors.white,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
         backgroundColor: Colors.lightGreen,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => context.pop(),
         ),
       ),
@@ -44,75 +47,57 @@ class FertilizerScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              Card(
-                margin: const EdgeInsets.all(16),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      const Text(
-                        'Добавить удобрение',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 10),
-                      TextField(
-                        controller: _controller,
-                        decoration: InputDecoration(
-                          labelText: 'Название удобрения',
-                          border: const OutlineInputBorder(),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(color: Colors.lightGreen, width: 2.0),
-                          ),
-                          labelStyle: const TextStyle(color: Colors.lightGreen),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      ElevatedButton.icon(
-                        onPressed: () {
-                          final name = _controller.text;
-                          if (name.trim().isNotEmpty) {
-                            context.read<FertilizersCubit>().addFertilizer(name);
-                            _controller.clear();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Удобрение добавлено!')),
-                            );
-                          }
-                        },
-                        icon: const Icon(Icons.add),
-                        label: const Text('Добавить'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.lightGreen,
-                          foregroundColor: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Text(
+                  'Сохраняйте информацию об используемых удобрениях для каждого растения',
+                  style: TextStyle(fontSize: 15, color: Colors.grey),
+                  textAlign: TextAlign.center,
                 ),
               ),
               const Padding(
                 padding: EdgeInsets.all(16),
                 child: Text(
-                  'Рекомендуемые удобрения:',
+                  'Список удобрений',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
               Expanded(
-                child: ListView.builder(
+                child: state.fertilizers.isEmpty
+                    ? const Center(
+                  child: Text(
+                    'Удобрений пока нет.\nНажмите +, чтобы добавить первое!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                )
+                    : ListView.separated(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   itemCount: state.fertilizers.length,
+                  separatorBuilder: (context, index) => const SizedBox(height: 8),
                   itemBuilder: (context, index) {
                     final name = state.fertilizers[index];
-                    return GestureDetector(
+                    return Dismissible(
                       key: ValueKey('fertilizer_${name}_$index'),
-                      onTap: () {
+                      direction: DismissDirection.startToEnd,
+                      background: Container(
+                        color: Colors.red,
+                        alignment: Alignment.centerLeft,
+                        padding: const EdgeInsets.only(left: 20),
+                        child: const Icon(Icons.delete, color: Colors.white),
+                      ),
+                      onDismissed: (direction) {
                         context.read<FertilizersCubit>().removeFertilizer(index);
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Удобрение удалено!')),
                         );
                       },
-                      child: ListTile(
-                        leading: const Icon(Icons.agriculture, color: Colors.brown),
-                        title: Text(name),
-                        trailing: const Icon(Icons.delete_outline, color: Colors.red),
+                      child: Card(
+                       // color: Colors.white,
+                        child: ListTile(
+                          leading: const Icon(Icons.agriculture, color: Colors.brown),
+                          title: Text(name),
+                        ),
                       ),
                     );
                   },
@@ -121,6 +106,20 @@ class FertilizerScreen extends StatelessWidget {
             ],
           );
         },
+      ),
+      // Кнопка добавления в правом нижнем углу
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.lightGreen,
+        foregroundColor: Colors.white,
+        onPressed: () {
+          // Получаем cubit из текущего контекста и передаём его в диалог
+          final cubit = context.read<FertilizersCubit>();
+          showDialog(
+            context: context,
+            builder: (context) => AddFertilizerDialog(cubit: cubit),
+          );
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }

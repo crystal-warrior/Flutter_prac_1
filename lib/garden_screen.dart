@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'auth/cubit/auth_cubit.dart';
+import 'features/authorization/cubit/auth_cubit.dart';
 
 class GardenScreen extends StatelessWidget {
   const GardenScreen({super.key});
@@ -10,14 +10,20 @@ class GardenScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.person, color: Colors.white),
+          onPressed: () => context.go('/profile'),
+        ),
         title: BlocBuilder<AuthCubit, AuthState>(
           builder: (context, state) {
-            final login = state.login ?? 'Гость';
+            final login = state.user?.login ?? 'Гость';
             return Text('Привет, $login!');
           },
         ),
         backgroundColor: Colors.lightGreen,
         actions: [
+
+          /*
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () {
@@ -25,7 +31,16 @@ class GardenScreen extends StatelessWidget {
               context.go('/auth');
             },
           ),
+
+          */
+
+
         ],
+        titleTextStyle: const TextStyle(
+          color: Colors.white,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -43,7 +58,7 @@ class GardenScreen extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             const Text(
-              'Выберите раздел для управления вашими растениями:',
+              'Выберите раздел для управления вашими растениями',
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.grey,
@@ -54,17 +69,20 @@ class GardenScreen extends StatelessWidget {
 
             Expanded(
               child: ListView.separated(
-                itemCount: 5,
+                itemCount: 6, //5 всегда на 1 больше надо вернуть, ибо да
                 separatorBuilder: (context, index) => const SizedBox(height: 12),
                 itemBuilder: (context, index) {
                   final List<Map<String, Object>> screens = [
+                    /*
                     {
                       'title': 'Мои растения',
                       'icon': Icons.favorite,
                       'route': '/garden/my_plants'
                     },
+
+                     */
                     {
-                      'title': 'Полив',
+                      'title': 'Регуляция полива',
                       'icon': Icons.water_drop,
                       'route': '/garden/watering'
                     },
@@ -79,9 +97,19 @@ class GardenScreen extends StatelessWidget {
                       'route': '/garden/care_tips'
                     },
                     {
-                      'title': 'Состояние растений',
+                      'title': 'Растения на полив',
                       'icon': Icons.eco,
                       'route': '/garden/plant_status'
+                    },
+                    {
+                      'title': 'Календарь посадок',
+                      'icon': Icons.calendar_today,
+                      'route': '/garden/planting_calendar'
+                    },
+                    {
+                      'title': 'Рекомендуемые растения',
+                      'icon': Icons.local_florist,
+                      'route': '/garden/recommended_plants'
                     },
                   ];
 
@@ -127,6 +155,8 @@ class GardenScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
+
+           /*
             OutlinedButton(
               onPressed: () {
                 context.read<AuthCubit>().logout();
@@ -154,6 +184,8 @@ class GardenScreen extends StatelessWidget {
                 ],
               ),
             ),
+
+            */
             const SizedBox(height: 10),
           ],
         ),
