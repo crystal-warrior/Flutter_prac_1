@@ -10,12 +10,15 @@ import 'package:jhvostov_prac_1/features/recommended_plants/screens/recommended_
 import 'package:jhvostov_prac_1/features/registration/screens/registration_screen.dart';
 import 'package:jhvostov_prac_1/features/watering/cubit/watering_cubit.dart';
 import 'features/authorization/screens/autorization_screen.dart';
-import 'garden_screen.dart';
+import 'features/garden/screens/garden_screen.dart';
 import 'features/care_tips/screens/care_tips_screen.dart';
 import 'features/fertilizers/screens/fertilizer_screen.dart';
 import 'features/my_plants/screens/my_plants_screen.dart';
 import 'features/plant/state/plants_container.dart';
 import 'features/watering/screens/watering_screen.dart';
+import 'features/weather/screens/weather_screen.dart';
+import 'features/lunar_calendar/screens/lunar_calendar_screen.dart';
+import 'features/sunrise_sunset/screens/sunrise_sunset_screen.dart';
 
 late GoRouter appRouter;
 
@@ -199,6 +202,30 @@ void initRouter() {
                 create: (context) => MyPlantsCubit(),
                 child: const MyPlantsScreen(),
               ),
+            ),
+          ),
+          GoRoute(
+            path: 'weather',
+            name: 'weather',
+            pageBuilder: (context, state) => MaterialPage(
+              key: state.pageKey,
+              child: const WeatherScreen(),
+            ),
+          ),
+          GoRoute(
+            path: 'lunar_calendar',
+            name: 'lunar_calendar',
+            pageBuilder: (context, state) => MaterialPage(
+              key: state.pageKey,
+              child: const LunarCalendarScreen(),
+            ),
+          ),
+          GoRoute(
+            path: 'sunrise_sunset',
+            name: 'sunrise_sunset',
+            pageBuilder: (context, state) => MaterialPage(
+              key: state.pageKey,
+              child: const SunriseSunsetScreen(),
             ),
           ),
 

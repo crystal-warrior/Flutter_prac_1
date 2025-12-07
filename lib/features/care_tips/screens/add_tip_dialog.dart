@@ -23,7 +23,7 @@ class AddTipDialog extends StatelessWidget {
               decoration: const InputDecoration(
                 labelText: 'Заголовок',
               ),
-              style: const TextStyle(color: Colors.lightGreen),
+              style: TextStyle(color: Theme.of(context).colorScheme.primary),
             ),
             const SizedBox(height: 12),
             TextField(
@@ -32,7 +32,7 @@ class AddTipDialog extends StatelessWidget {
                 labelText: 'Текст совета',
               ),
               maxLines: 3,
-              style: const TextStyle(color: Colors.lightGreen),
+              style: TextStyle(color: Theme.of(context).colorScheme.primary),
             ),
           ],
         ),
@@ -58,8 +58,7 @@ class AddTipDialog extends StatelessWidget {
               );
             }
           },
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.lightGreen),
-          child: const Text('Сохранить', style: TextStyle(color: Colors.white)),
+          child: const Text('Сохранить'),
         ),
       ],
     );
