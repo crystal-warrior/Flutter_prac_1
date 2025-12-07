@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jhvostov_prac_1/features/authorization/cubit/auth_cubit.dart';
-import 'package:jhvostov_prac_1/models/user.dart';
 
 class AuthorizationScreen extends StatelessWidget {
   const AuthorizationScreen({super.key});
@@ -15,18 +14,13 @@ class AuthorizationScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Авторизация'),
-        backgroundColor: Colors.lightGreen,
-        titleTextStyle: const TextStyle(
-          color: Colors.white,
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
             const Text('Мы Вас ждали!', style: TextStyle(fontSize: 18)),
             const SizedBox(height: 20),
 
@@ -43,46 +37,46 @@ class AuthorizationScreen extends StatelessWidget {
              */
             TextField(
               controller: _loginController,
-              style: const TextStyle(color: Colors.lightGreen),
+              style: TextStyle(color: Theme.of(context).colorScheme.primary),
               decoration: InputDecoration(
                 labelText: 'Логин',
-                labelStyle: const TextStyle(color: Colors.lightGreen),
+                labelStyle: TextStyle(color: Theme.of(context).colorScheme.primary),
                 border: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.lightGreen),
+                  borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.lightGreen),
+                  borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.lightGreen, width: 2.0),
+                  borderSide: BorderSide(color: Theme.of(context).colorScheme.primary, width: 2.0),
                 ),
-                floatingLabelStyle: const TextStyle(color: Colors.lightGreen),
+                floatingLabelStyle: TextStyle(color: Theme.of(context).colorScheme.primary),
               ),
             ),
             const SizedBox(height: 16),
 
             TextField(
               controller: _passwordController,
-              style: const TextStyle(color: Colors.lightGreen),
+              style: TextStyle(color: Theme.of(context).colorScheme.primary),
               decoration: InputDecoration(
                 labelText: 'Пароль',
-                labelStyle: const TextStyle(color: Colors.lightGreen),
+                labelStyle: TextStyle(color: Theme.of(context).colorScheme.primary),
                 border: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.lightGreen),
+                  borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.lightGreen),
+                  borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.lightGreen, width: 2.0),
+                  borderSide: BorderSide(color: Theme.of(context).colorScheme.primary, width: 2.0),
                 ),
-                floatingLabelStyle: const TextStyle(color: Colors.lightGreen),
+                floatingLabelStyle: TextStyle(color: Theme.of(context).colorScheme.primary),
               ),
             ),
             const SizedBox(height: 30),
 
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 final login = _loginController.text.trim();
                 final password = _passwordController.text.trim();
 
@@ -95,17 +89,21 @@ class AuthorizationScreen extends StatelessWidget {
                   return;
                 }
 
-                final user = User(login: login, password: password);
-                context.read<AuthCubit>().setUser(user);
-                context.go('/garden');
+                final authCubit = context.read<AuthCubit>();
+                await authCubit.authenticate(login, password);
+                
+                if (!context.mounted) return;
+                
+                if (authCubit.state.isAuthenticated) {
+                  context.go('/garden');
+                } else {
+                  _showError(context, authCubit.state.error ?? 'Ошибка авторизации');
+                }
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.lightGreen,
-                foregroundColor: Colors.white,
-              ),
+              style: ElevatedButton.styleFrom(),
               child: const Text('Войти'),
             ),
-            const Spacer(),
+            const SizedBox(height: 30),
             TextButton(
               onPressed: () => context.go('/register'),
               child: const Text(
@@ -116,7 +114,9 @@ class AuthorizationScreen extends StatelessWidget {
                 ),
               ),
             ),
+            const SizedBox(height: 20),
           ],
+        ),
         ),
       ),
     );

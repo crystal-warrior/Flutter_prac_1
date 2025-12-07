@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jhvostov_prac_1/features/plant/screens/plant_screen.dart';
-import '../models/plant_model.dart';
-
-import '../screens/plant_form_screen.dart';
+import '../../../../core/models/plant.dart';
 
 enum Screen { list, form }
 
@@ -14,8 +12,8 @@ class PlantsContainer extends StatefulWidget {
 }
 
 class _PlantsContainerState extends State<PlantsContainer> {
-  final List<PlantModel> _plants = [];
-  PlantModel? _recentlyRemovedPlant;
+  final List<Plant> _plants = [];
+  Plant? _recentlyRemovedPlant;
 
   double get _averageComplexity {
     if (_plants.isEmpty) return 0;
@@ -23,7 +21,7 @@ class _PlantsContainerState extends State<PlantsContainer> {
     return sum / _plants.length;
   }
 
-  void _addPlant(PlantModel newPlant) {
+  void _addPlant(Plant newPlant) {
     setState(() {
       _plants.add(newPlant);
     });

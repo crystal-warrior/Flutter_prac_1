@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../models/plant_model.dart';
+import '../../../../core/models/plant.dart';
 import 'plant_row.dart';
 
 class PlantsTable extends StatelessWidget {
-  final List<PlantModel> plants;
+  final List<Plant> plants;
   final ValueChanged<String> onRemove;
 
   const PlantsTable({

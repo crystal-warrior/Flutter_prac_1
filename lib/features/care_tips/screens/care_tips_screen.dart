@@ -15,17 +15,10 @@ class CareTipsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Советы по уходу'),
-        titleTextStyle: const TextStyle(
-          color: Colors.white,
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
-        backgroundColor: Colors.lightGreen,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
-
       ),
       body: BlocBuilder<CareTipsCubit, CareTipsState>(
         builder: (context, state) {
@@ -33,10 +26,13 @@ class CareTipsScreen extends StatelessWidget {
             //crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
-                child: SizedBox(
-                  width: 210,
-                  height: 210,
-                  child: CachedNetworkImage(
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final imageSize = constraints.maxWidth * 0.5;
+                    return SizedBox(
+                      width: imageSize,
+                      height: imageSize,
+                      child: CachedNetworkImage(
                     imageUrl: imageUrl,
                     progressIndicatorBuilder: (context, url, progress) =>
                     const CircularProgressIndicator(),
@@ -46,7 +42,9 @@ class CareTipsScreen extends StatelessWidget {
                       size: 50,
                     ),
                     fit: BoxFit.contain,
-                  ),
+                      ),
+                    );
+                  },
                 ),
               ),
               const Padding(
@@ -57,6 +55,65 @@ class CareTipsScreen extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
               ),
+              // Карточка с локацией
+              if (state.isLoadingLocation)
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: LinearProgressIndicator(),
+                )
+              else if (state.location != null)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(left: 4, bottom: 4),
+                        child: Text(
+                          'Советы выдаются по адресу:',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ),
+                      Card(
+                        color: Theme.of(context).colorScheme.surface,
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Row(
+                            children: [
+                              Icon(Icons.location_on, color: Theme.of(context).colorScheme.primary),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Ваше местоположение',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    Text(
+                                      state.location!.fullLocation,
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               const Padding(
                 padding: EdgeInsets.all(16),
                 child: Text(
@@ -120,8 +177,6 @@ class CareTipsScreen extends StatelessWidget {
       ),
 
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.lightGreen,
-        foregroundColor: Colors.white,
         onPressed: () {
           // Получаем cubit из текущего контекста и передаём его в диалог
           final cubit = context.read<CareTipsCubit>();

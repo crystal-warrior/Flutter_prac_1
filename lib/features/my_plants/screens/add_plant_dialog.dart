@@ -22,7 +22,7 @@ class AddPlantDialog extends StatelessWidget {
               decoration: const InputDecoration(
                 labelText: 'Название растения',
               ),
-              style: const TextStyle(color: Colors.lightGreen),
+              style: TextStyle(color: Theme.of(context).colorScheme.primary),
             ),
             const SizedBox(height: 12),
             TextField(
@@ -31,7 +31,7 @@ class AddPlantDialog extends StatelessWidget {
                 labelText: 'Дней до полива',
               ),
               keyboardType: TextInputType.number,
-              style: const TextStyle(color: Colors.lightGreen),
+              style: TextStyle(color: Theme.of(context).colorScheme.primary),
             ),
           ],
         ),
@@ -64,8 +64,7 @@ class AddPlantDialog extends StatelessWidget {
             );
             Navigator.of(context).pop();
           },
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.lightGreen),
-          child: const Text('Сохранить', style: TextStyle(color: Colors.white)),
+          child: const Text('Сохранить'),
         ),
       ],
     );

@@ -1,34 +1,62 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../models/recommended_plant.dart';
-import '../data/plant_database.dart';
+import '../../../../core/models/recommended_plant.dart';
+import '../../../../domain/usecases/get_recommended_plants_usecase.dart';
+import '../../../../di/service_locator.dart';
 
 class RecommendedPlantsState {
   final List<RecommendedPlant> plants;
   final String? userRegion;
+  final bool isLoading;
+  final String? error;
 
-  const RecommendedPlantsState({required this.plants, this.userRegion});
+  const RecommendedPlantsState({
+    required this.plants,
+    this.userRegion,
+    this.isLoading = false,
+    this.error,
+  });
 
-  RecommendedPlantsState copyWith({List<RecommendedPlant>? plants, String? userRegion}) {
+  RecommendedPlantsState copyWith({
+    List<RecommendedPlant>? plants,
+    String? userRegion,
+    bool? isLoading,
+    String? error,
+  }) {
     return RecommendedPlantsState(
       plants: plants ?? this.plants,
       userRegion: userRegion ?? this.userRegion,
+      isLoading: isLoading ?? this.isLoading,
+      error: error ?? this.error,
     );
   }
 }
 
 class RecommendedPlantsCubit extends Cubit<RecommendedPlantsState> {
-  RecommendedPlantsCubit() : super(const RecommendedPlantsState(plants: []));
+  final GetRecommendedPlantsUseCase _getRecommendedPlantsUseCase;
 
-  void loadPlantsForUserRegion(String? userRegion) {
-    if (userRegion == null) {
-      emit(state.copyWith(plants: [], userRegion: null));
-      return;
+  RecommendedPlantsCubit({
+    GetRecommendedPlantsUseCase? getRecommendedPlantsUseCase,
+  })  : _getRecommendedPlantsUseCase = getRecommendedPlantsUseCase ?? locator<GetRecommendedPlantsUseCase>(),
+        super(const RecommendedPlantsState(plants: []));
+
+  Future<void> loadPlantsForUserRegion(String? userRegion) async {
+    emit(state.copyWith(isLoading: true, error: null));
+    try {
+      final plants = await _getRecommendedPlantsUseCase(region: userRegion);
+      emit(state.copyWith(plants: plants, userRegion: userRegion, isLoading: false));
+    } catch (e) {
+      emit(state.copyWith(isLoading: false, error: e.toString()));
     }
+  }
 
-    final filtered = allPlants
-        .where((plant) => plant.region == userRegion)
-        .toList();
-
-    emit(state.copyWith(plants: filtered, userRegion: userRegion));
+  Future<void> searchPlants(String query) async {
+    emit(state.copyWith(isLoading: true, error: null));
+    try {
+      // Поиск учитывает название, тип, описание и регион пользователя
+      final plants = await _getRecommendedPlantsUseCase.searchPlants(query, region: state.userRegion);
+      emit(state.copyWith(plants: plants, isLoading: false));
+    } catch (e) {
+      emit(state.copyWith(isLoading: false, error: e.toString()));
+    }
   }
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../models/plant_model.dart';
+import '../../../../core/models/plant.dart';
 
 class PlantRow extends StatelessWidget {
-  final PlantModel plant;
+  final Plant plant;
   final VoidCallback onRemove;
 
   const PlantRow({

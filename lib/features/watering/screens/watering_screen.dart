@@ -15,14 +15,8 @@ class WateringScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Регуляция полива'),
-        titleTextStyle: const TextStyle(
-          color: Colors.white,
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
-        backgroundColor: Colors.lightGreen,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
       ),

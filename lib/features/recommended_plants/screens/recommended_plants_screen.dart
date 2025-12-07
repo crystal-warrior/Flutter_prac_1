@@ -15,9 +15,8 @@ class RecommendedPlantsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Рекомендуемые растения'),
-        backgroundColor: Colors.lightGreen,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
       ),
@@ -47,17 +46,60 @@ class RecommendedPlantsScreen extends StatelessWidget {
               );
             }
 
-            if (state.plants.isEmpty) {
-              return Center(
-                child: Text(
-                  'Нет рекомендаций для региона:\n${state.userRegion}',
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 16),
+            return Column(
+              children: [
+                // Поле поиска
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Поиск растений...',
+                      prefixIcon: const Icon(Icons.search),
+                      suffixIcon: state.isLoading
+                          ? const Padding(
+                              padding: EdgeInsets.all(12),
+                              child: SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(strokeWidth: 2),
+                              ),
+                            )
+                          : null,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Theme.of(context).colorScheme.primary, width: 2),
+                      ),
+                    ),
+                    onChanged: (value) {
+                      if (value.isEmpty) {
+                        context.read<RecommendedPlantsCubit>().loadPlantsForUserRegion(state.userRegion);
+                      } else if (value.length >= 2) {
+                        context.read<RecommendedPlantsCubit>().searchPlants(value);
+                      }
+                    },
+                  ),
                 ),
-              );
-            }
-
-            return ListView.builder(
+                // Список растений
+                Expanded(
+                  child: state.plants.isEmpty
+                      ? Center(
+                          child: Text(
+                            state.isLoading
+                                ? 'Загрузка...'
+                                : 'Нет результатов для поиска',
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(fontSize: 16, color: Colors.grey),
+                          ),
+                        )
+                      : ListView.builder(
               padding: const EdgeInsets.all(16),
               itemCount: state.plants.length,
               itemBuilder: (context, index) {
@@ -77,7 +119,7 @@ class RecommendedPlantsScreen extends StatelessWidget {
                         const SizedBox(height: 4),
                         Text(
                           plant.type.toUpperCase(),
-                          style: TextStyle(color: Colors.lightGreen, fontWeight: FontWeight.bold),
+                          style: TextStyle(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 8),
                         Text(plant.description),
@@ -86,6 +128,9 @@ class RecommendedPlantsScreen extends StatelessWidget {
                   ),
                 );
               },
+                        ),
+                ),
+              ],
             );
           },
         ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../models/plant_model.dart';
 
 class PlantFormScreen extends StatefulWidget {
   final void Function(String name, String type, int careComplexity) onSave;
@@ -65,10 +64,11 @@ class _PlantFormScreenState extends State<PlantFormScreen> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
             TextField(
               controller: _nameController,
               decoration: const InputDecoration(
@@ -159,7 +159,9 @@ class _PlantFormScreenState extends State<PlantFormScreen> {
                 ),
               ],
             ),
+            const SizedBox(height: 20),
           ],
+        ),
         ),
       ),
     );

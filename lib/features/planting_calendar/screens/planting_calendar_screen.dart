@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../cubit/planting_calendar_cubit.dart';
-import 'package:intl/intl.dart';
 
 class PlantingCalendarScreen extends StatelessWidget {
   const PlantingCalendarScreen({super.key});
@@ -13,9 +12,8 @@ class PlantingCalendarScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Календарь посадок'),
-        backgroundColor: Colors.lightGreen,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
       ),
@@ -37,22 +35,41 @@ class _CalendarBody extends StatefulWidget {
 class _CalendarBodyState extends State<_CalendarBody> {
   late DateTime _selectedDay;
   final _noteController = TextEditingController();
+  DateTime? _lastSelectedDay;
+  bool _isEditing = false;
 
   @override
   void initState() {
     super.initState();
     _selectedDay = DateTime.now();
+    _lastSelectedDay = _selectedDay;
+  }
+
+  @override
+  void dispose() {
+    _noteController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<PlantingCalendarCubit, PlantingCalendarState>(
       builder: (context, state) {
-        final event = state.getEventForDate(_selectedDay);
-        _noteController.text = event?.note ?? '';
+        final events = state.getEventsForDate(_selectedDay);
+        final firstEvent = events?.isNotEmpty == true ? events!.first : null;
+        
+        // Обновляем текст контроллера только если:
+        // 1. Выбрана другая дата
+        // 2. Или событие изменилось (новое событие загружено)
+        if (_lastSelectedDay != _selectedDay || (!_isEditing && firstEvent?.note != _noteController.text)) {
+          _noteController.text = firstEvent?.note ?? '';
+          _lastSelectedDay = _selectedDay;
+          _isEditing = false;
+        }
 
-        return Column(
-          children: [
+        return SafeArea(
+          child: Column(
+            children: [
             TableCalendar(
               locale: 'ru_RU',
               headerStyle: HeaderStyle(
@@ -68,16 +85,17 @@ class _CalendarBodyState extends State<_CalendarBody> {
               onDaySelected: (selectedDay, focusedDay) {
                 setState(() {
                   _selectedDay = selectedDay;
+                  _isEditing = false;
                 });
               },
               calendarStyle: CalendarStyle(
 
                 selectedDecoration: BoxDecoration(
-                  color: Colors.lightGreen,
+                  color: Theme.of(context).colorScheme.primary,
                   shape: BoxShape.circle,
                 ),
                 todayDecoration: BoxDecoration(
-                  color: Colors.lightGreen[200],
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
                   shape: BoxShape.circle,
                 ),
               ),
@@ -90,9 +108,9 @@ class _CalendarBodyState extends State<_CalendarBody> {
 
                   Color? bgColor;
                   if (isSelected) {
-                    bgColor = Colors.lightGreen;
+                    bgColor = Theme.of(context).colorScheme.primary;
                   } else if (isToday) {
-                    bgColor = Colors.lightGreen[200];
+                    bgColor = Theme.of(context).colorScheme.primary.withOpacity(0.5);
                   }
 
                   return Container(
@@ -111,8 +129,8 @@ class _CalendarBodyState extends State<_CalendarBody> {
                               width: 6,
                               height: 6,
                               margin: const EdgeInsets.only(top: 2),
-                              decoration: const BoxDecoration(
-                                color: Colors.lightGreen,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.primary,
                                 shape: BoxShape.circle,
                               ),
                             ),
@@ -131,42 +149,49 @@ class _CalendarBodyState extends State<_CalendarBody> {
                   Expanded(
                     child: TextField(
                       controller: _noteController,
+                      onChanged: (_) {
+                        _isEditing = true;
+                      },
                       decoration: InputDecoration(
                         hintText: 'В этот день ${_selectedDay.day}.${_selectedDay.month}.${_selectedDay.year} я...',
                         border: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.lightGreen),
+                          borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.save, color: Colors.lightGreen),
-                    onPressed: () {
+                    icon: Icon(Icons.save, color: Theme.of(context).colorScheme.primary),
+                    onPressed: () async {
                       final note = _noteController.text;
                       if (note.trim().isNotEmpty) {
-                        context.read<PlantingCalendarCubit>().addEvent(_selectedDay, note);
+                        await context.read<PlantingCalendarCubit>().addEvent(_selectedDay, note);
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Событие сохранено')),
                         );
                       }
                     },
                   ),
-                  if (event != null)
+                  if (firstEvent != null)
                     IconButton(
                       icon: const Icon(Icons.delete, color: Colors.red),
                       onPressed: () {
-                        context.read<PlantingCalendarCubit>().removeEvent(_selectedDay);
-                        _noteController.clear();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Событие удалено')),
-                        );
+                        final eventsForDate = state.getEventsForDate(_selectedDay);
+                        if (eventsForDate != null && eventsForDate.isNotEmpty) {
+                          context.read<PlantingCalendarCubit>().removeEvent(_selectedDay, 0);
+                          _noteController.clear();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Событие удалено')),
+                          );
+                        }
                       },
                     ),
                 ],
               ),
             ),
           ],
+          ),
         );
       },
     );

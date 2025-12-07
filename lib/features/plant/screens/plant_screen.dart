@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/plant_model.dart';
+import '../../../../core/models/plant.dart';
 import '../widgets/plants_table.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:go_router/go_router.dart';
@@ -7,9 +7,9 @@ import 'package:go_router/go_router.dart';
 class PlantsScreen extends StatelessWidget {
   final String _imageUrl = "https://static.vecteezy.com/system/resources/previews/001/500/436/large_2x/many-plants-in-greenhouse-with-glass-wall-on-white-background-free-vector.jpg";
 
-  final List<PlantModel> plants;
+  final List<Plant> plants;
   final double averageComplexity;
-  final Function(PlantModel) onAdd;
+  final Function(Plant) onAdd;
   final ValueChanged<String> onRemove;
 
   const PlantsScreen({
@@ -55,23 +55,23 @@ class PlantsScreen extends StatelessWidget {
                     children: [
                       Text(
                         plants.length.toString(),
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
-                          color: Colors.lightGreen,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
-                      const Text('Растений в вашем саду'),
+                      Text('Растений в вашем саду'),
                     ],
                   ),
                   Column(
                     children: [
                       Text(
                         averageComplexity.toStringAsFixed(1),
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
-                          color: Colors.lightGreen,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
                       const Text('Сложность ухода за вашим садом'),
