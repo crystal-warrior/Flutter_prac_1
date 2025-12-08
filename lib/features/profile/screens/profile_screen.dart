@@ -5,6 +5,7 @@ import 'package:jhvostov_prac_1/features/authorization/cubit/auth_cubit.dart';
 import 'package:jhvostov_prac_1/features/theme/cubit/theme_cubit.dart';
 import 'package:jhvostov_prac_1/domain/usecases/get_location_usecase.dart';
 import 'package:jhvostov_prac_1/domain/repositories/auth_repository.dart';
+import 'package:jhvostov_prac_1/core/models/location.dart';
 import 'package:jhvostov_prac_1/di/service_locator.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -18,6 +19,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final TextEditingController _gardenAddressController = TextEditingController();
   String? _gardenAddress;
   bool _isSearchingGardenAddress = false;
+  bool _isLoadingSavedPlaces = false;
+  List<Location>? _savedPlacesAddresses;
 
   @override
   void dispose() {
@@ -337,6 +340,129 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ],
                             ),
                           ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                // === Получение адресов по координатам (метод 5: getAddressesByCoordinates) ===
+                _buildSectionHeader(context, 'Сохраненные места'),
+                Card(
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Получение адресов для сохраненных координат',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        const Text(
+                          'Полезно для получения адресов нескольких сохраненных мест (дом, работа, дача) по их координатам',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        ElevatedButton.icon(
+                          onPressed: _isLoadingSavedPlaces
+                              ? null
+                              : () async {
+                                  setState(() {
+                                    _isLoadingSavedPlaces = true;
+                                  });
+                                  try {
+                                    // Пример координат для демонстрации (можно заменить на реальные сохраненные координаты)
+                                    final coordinates = [
+                                      {'lat': 55.7558, 'lon': 37.6173}, // Москва
+                                      {'lat': 59.9343, 'lon': 30.3351}, // Санкт-Петербург
+                                      {'lat': 55.8304, 'lon': 49.0661}, // Казань
+                                    ];
+                                    final locations = await locator<GetLocationUseCase>().getByCoordinates(coordinates);
+                                    setState(() {
+                                      _savedPlacesAddresses = locations;
+                                    });
+                                    if (mounted) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Text('Получено адресов: ${locations.length}'),
+                                          backgroundColor: Theme.of(context).colorScheme.primary,
+                                        ),
+                                      );
+                                    }
+                                  } catch (e) {
+                                    if (mounted) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Text('Ошибка получения адресов: $e'),
+                                          backgroundColor: Colors.red,
+                                        ),
+                                      );
+                                    }
+                                  } finally {
+                                    setState(() {
+                                      _isLoadingSavedPlaces = false;
+                                    });
+                                  }
+                                },
+                          icon: _isLoadingSavedPlaces
+                              ? const SizedBox(
+                                  width: 16,
+                                  height: 16,
+                                  child: CircularProgressIndicator(strokeWidth: 2),
+                                )
+                              : const Icon(Icons.location_searching),
+                          label: Text(_isLoadingSavedPlaces ? 'Загрузка...' : 'Получить адреса сохраненных мест'),
+                        ),
+                        if (_savedPlacesAddresses != null && _savedPlacesAddresses!.isNotEmpty) ...[
+                          const SizedBox(height: 16),
+                          ..._savedPlacesAddresses!.map((location) => Card(
+                                margin: const EdgeInsets.only(bottom: 8),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      if (location.city != null)
+                                        Text(
+                                          location.city!,
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      if (location.address != null) ...[
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          location.address!,
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      ],
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        'Координаты: ${location.latitude.toStringAsFixed(4)}, ${location.longitude.toStringAsFixed(4)}',
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )),
                         ],
                       ],
                     ),

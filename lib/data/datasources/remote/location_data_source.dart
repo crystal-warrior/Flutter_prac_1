@@ -259,7 +259,7 @@ class LocationDataSource {
       try {
         final lat = coord['lat']!;
         final lon = coord['lon']!;
-        // Используем geocode для каждой пары координат
+
         final response = await _geocodeApi!.geocode(
           '$lon,$lat',
           'json',

@@ -98,7 +98,7 @@ class WeatherDataSource {
     try {
       final List<WeatherDto> results = [];
       for (final city in cities) {
-        // Используем только Яндекс.Погода API для каждого города
+
         final weather = await getCurrentWeatherByCity(city);
         results.add(weather);
       }
