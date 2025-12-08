@@ -42,25 +42,25 @@ class DioClient {
             // Для Яндекс.Погоды ключ передается через заголовок
             if (options.baseUrl.contains('weather.yandex.ru')) {
               options.headers['X-Yandex-Weather-Key'] = apiKey;
-              print('🔑 Добавлен API ключ для Weather в заголовок');
+              print('Добавлен API ключ для Weather в заголовок');
             }
             // Для Geocoding API ключ передается через query параметр
             else if (options.baseUrl.contains('geocode-maps.yandex.ru')) {
               // Объединяем существующие query параметры с API ключом
               options.queryParameters['apikey'] = apiKey;
-              print('🔑 Добавлен API ключ для Geocoding: ${apiKey.substring(0, 8)}...');
-              print('🔍 Интерсептор: queryParameters после = ${options.queryParameters}');
+              print('Добавлен API ключ для Geocoding: ${apiKey.substring(0, 8)}...');
+              print('Интерсептор: queryParameters после = ${options.queryParameters}');
             }
             // Для OpenWeatherMap API ключ передается через query параметр appid
             else if (options.baseUrl.contains('openweathermap.org')) {
               options.queryParameters['appid'] = apiKey;
-              print('🔑 Добавлен API ключ для OpenWeatherMap: ${apiKey.substring(0, 8)}...');
+              print('Добавлен API ключ для OpenWeatherMap: ${apiKey.substring(0, 8)}...');
             }
             // Для бесплатных API без ключей ничего не добавляем
             else if (options.baseUrl.contains('ip-api.com')) {
-              print('🌐 Используется бесплатный публичный API без ключа: ${options.baseUrl}');
+              print('Используется бесплатный публичный API без ключа: ${options.baseUrl}');
             } else {
-              print('⚠️ Неизвестный baseUrl: ${options.baseUrl}');
+              print('Неизвестный baseUrl: ${options.baseUrl}');
             }
             handler.next(options);
           },

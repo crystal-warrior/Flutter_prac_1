@@ -192,6 +192,121 @@ class LocationDataSource {
     return await getLocationByAddress(city);
   }
 
+  // Запрос 9: Получение координат для нескольких городов (массовое геокодирование)
+  Future<List<Location>> getLocationsByCities(List<String> cities) async {
+    if (_geocodeApi == null) {
+      throw Exception('GeocodeApi не настроен');
+    }
+    final List<Location> results = [];
+    for (final city in cities) {
+      try {
+        // Используем reverseGeocode для каждого города
+        final response = await _geocodeApi!.reverseGeocode(
+          city,
+          'json',
+          1,
+          _geocodeApiKey,
+        );
+        final responseData = response;
+        final features = responseData['response']?['GeoObjectCollection']?['featureMember'] as List?;
+        if (features != null && features.isNotEmpty) {
+          final geoObject = features[0]['GeoObject'];
+          final pos = geoObject['Point']?['pos'] as String?;
+          if (pos != null) {
+            final coords = pos.split(' ');
+            final longitude = double.parse(coords[0]);
+            final latitude = double.parse(coords[1]);
+            final metaData = geoObject['metaDataProperty']?['GeocoderMetaData'];
+            final fullAddress = metaData?['text'] as String?;
+            String? cityName;
+            String? region;
+            final components = metaData?['Address']?['Components'] as List?;
+            if (components != null) {
+              for (var component in components) {
+                final kind = component['kind'] as String?;
+                if (kind == 'locality') {
+                  cityName = component['name'] as String?;
+                } else if (kind == 'province') {
+                  region = component['name'] as String?;
+                }
+              }
+            }
+            results.add(Location(
+              latitude: latitude,
+              longitude: longitude,
+              address: fullAddress,
+              city: cityName ?? city,
+              region: region,
+            ));
+          }
+        }
+      } catch (e) {
+        // Пропускаем города, для которых не удалось получить координаты
+        print('Ошибка при получении координат для города $city: $e');
+        continue;
+      }
+    }
+    return results;
+  }
+
+  // Запрос 10: Получение адресов для нескольких координат (массовое обратное геокодирование)
+  Future<List<Location>> getAddressesByCoordinates(List<Map<String, double>> coordinates) async {
+    if (_geocodeApi == null) {
+      throw Exception('GeocodeApi не настроен');
+    }
+    final List<Location> results = [];
+    for (final coord in coordinates) {
+      try {
+        final lat = coord['lat']!;
+        final lon = coord['lon']!;
+        // Используем geocode для каждой пары координат
+        final response = await _geocodeApi!.geocode(
+          '$lon,$lat',
+          'json',
+          1,
+          _geocodeApiKey,
+        );
+        final responseData = response;
+        final geoObjectCollection = responseData['response']?['GeoObjectCollection'];
+        final features = geoObjectCollection?['featureMember'] as List?;
+        if (features != null && features.isNotEmpty) {
+          final feature = features[0];
+          final geoObject = feature['GeoObject'];
+          final metaData = geoObject['metaDataProperty']?['GeocoderMetaData'];
+          final address = metaData?['text'] as String?;
+          String? city;
+          String? region;
+          final components = metaData?['Address']?['Components'] as List?;
+          if (components != null) {
+            for (var component in components) {
+              final kind = component['kind'] as String?;
+              final name = component['name'] as String?;
+              if (kind == 'locality' && name != null) {
+                city = name;
+              } else if (kind == 'province' && name != null) {
+                region = name;
+              } else if (kind == 'area' && name != null && region == null) {
+                region = name;
+              }
+            }
+          }
+          results.add(Location(
+            latitude: lat,
+            longitude: lon,
+            address: address,
+            city: city,
+            region: region,
+          ));
+        }
+      } catch (e) {
+        // Пропускаем координаты, для которых не удалось получить адрес
+        print('Ошибка при получении адреса для координат ${coord}: $e');
+        continue;
+      }
+    }
+    return results;
+  }
+
   // Вспомогательный метод для определения региона по координатам
   String? _getRegionByCoordinates(double lat, double lon) {
     // Упрощенное определение региона по координатам для основных городов России

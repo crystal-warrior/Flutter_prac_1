@@ -4,10 +4,26 @@ import 'package:go_router/go_router.dart';
 import 'package:jhvostov_prac_1/features/authorization/cubit/auth_cubit.dart';
 import 'package:jhvostov_prac_1/features/theme/cubit/theme_cubit.dart';
 import 'package:jhvostov_prac_1/domain/usecases/get_location_usecase.dart';
+import 'package:jhvostov_prac_1/domain/repositories/auth_repository.dart';
 import 'package:jhvostov_prac_1/di/service_locator.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  final TextEditingController _gardenAddressController = TextEditingController();
+  String? _gardenAddress;
+  bool _isSearchingGardenAddress = false;
+
+  @override
+  void dispose() {
+    _gardenAddressController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -175,6 +191,156 @@ class ProfileScreen extends StatelessWidget {
                       tooltip: 'Обновить местоположение по геолокации',
                     ),
                   ],
+                ),
+
+                const SizedBox(height: 20),
+
+                // === Адрес садового участка ===
+                _buildSectionHeader(context, 'Адрес садового участка'),
+                Card(
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Адрес садового участка/дачи (необязательно)',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        const Text(
+                          'Укажите адрес вашего садового участка или дачи для получения точных рекомендаций по уходу',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: _gardenAddressController,
+                                decoration: InputDecoration(
+                                  hintText: 'Например: Московская область, д. Садовое, ул. Дачная, 15',
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: Theme.of(context).colorScheme.primary, width: 2.0),
+                                  ),
+                                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                                ),
+                                onChanged: (value) {
+                                  setState(() {
+                                    _gardenAddress = value.trim().isEmpty ? null : value.trim();
+                                  });
+                                },
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            _isSearchingGardenAddress
+                                ? const CircularProgressIndicator()
+                                : IconButton(
+                                    icon: Icon(Icons.search, color: Theme.of(context).colorScheme.primary),
+                                    onPressed: () async {
+                                      final address = _gardenAddressController.text.trim();
+                                      if (address.isNotEmpty) {
+                                        setState(() {
+                                          _isSearchingGardenAddress = true;
+                                        });
+                                        try {
+                                          final location = await locator<GetLocationUseCase>().getByAddress(address);
+                                          setState(() {
+                                            _gardenAddress = location.address;
+                                          });
+                                          
+                                          // Обновляем местоположение пользователя
+                                          final currentUser = context.read<AuthCubit>().state.user;
+                                          if (currentUser != null) {
+                                            final newRegion = location.region ?? location.city;
+                                            final updatedUser = currentUser.copyWith(
+                                              region: newRegion,
+                                              city: location.city,
+                                              address: location.address,
+                                            );
+                                            
+                                            // Сохраняем обновленные данные через репозиторий
+                                            final authRepository = locator<AuthRepository>();
+                                            await authRepository.updateUser(updatedUser);
+                                            
+                                            // Обновляем состояние в Cubit
+                                            context.read<AuthCubit>().setUser(updatedUser);
+                                          }
+                                          
+                                          if (mounted) {
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              SnackBar(
+                                                content: Text('Адрес садового участка найден и местоположение обновлено: ${location.address ?? "Неизвестно"}'),
+                                                backgroundColor: Theme.of(context).colorScheme.primary,
+                                              ),
+                                            );
+                                          }
+                                        } catch (e) {
+                                          if (mounted) {
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              SnackBar(
+                                                content: Text('Ошибка поиска адреса: $e'),
+                                                backgroundColor: Colors.red,
+                                              ),
+                                            );
+                                          }
+                                        } finally {
+                                          setState(() {
+                                            _isSearchingGardenAddress = false;
+                                          });
+                                        }
+                                      }
+                                    },
+                                    tooltip: 'Найти адрес садового участка',
+                                  ),
+                          ],
+                        ),
+                        if (_gardenAddress != null && _gardenAddress!.isNotEmpty) ...[
+                          const SizedBox(height: 12),
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.location_on,
+                                  color: Theme.of(context).colorScheme.primary,
+                                  size: 20,
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    _gardenAddress!,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Theme.of(context).colorScheme.primary,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
                 ),
 
                 const SizedBox(height: 20),

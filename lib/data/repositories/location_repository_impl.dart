@@ -21,5 +21,15 @@ class LocationRepositoryImpl implements LocationRepository {
   Future<Location> getLocationByCity(String city) async {
     return await _dataSource.getLocationByCity(city);
   }
+
+  @override
+  Future<List<Location>> getLocationsByCities(List<String> cities) async {
+    return await _dataSource.getLocationsByCities(cities);
+  }
+
+  @override
+  Future<List<Location>> getAddressesByCoordinates(List<Map<String, double>> coordinates) async {
+    return await _dataSource.getAddressesByCoordinates(coordinates);
+  }
 }
 

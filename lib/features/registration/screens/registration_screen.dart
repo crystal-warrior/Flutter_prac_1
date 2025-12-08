@@ -18,9 +18,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final _passwordController = TextEditingController();
   final _phoneController = TextEditingController();
   final _emailController = TextEditingController();
+  final _gardenAddressController = TextEditingController();
   String? _selectedRegion;
   String? _detectedCity;
   String? _detectedAddress;
+  String? _gardenAddress;
+  bool _isSearchingGardenAddress = false;
 
   List<String> _regions = [
     'Москва',
@@ -44,6 +47,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     'Омская область',
     'Ростовская область',
   ];
+
+  @override
+  void dispose() {
+    _loginController.dispose();
+    _passwordController.dispose();
+    _phoneController.dispose();
+    _emailController.dispose();
+    _gardenAddressController.dispose();
+    super.dispose();
+  }
 
   void _showError(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -312,9 +325,111 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 ),
               ),
             ],
+            
+            // Поиск адреса садового участка (метод 2: getLocationByAddress)
+            const SizedBox(height: 24),
+            const Text(
+              'Адрес садового участка (опционально)',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Укажите адрес вашего садового участка или дачи для получения точных рекомендаций по уходу',
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _gardenAddressController,
+                    decoration: InputDecoration(
+                      hintText: 'Например: Московская область, д. Садовое, ул. Дачная, 15',
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Theme.of(context).colorScheme.primary, width: 2.0),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                ElevatedButton.icon(
+                  onPressed: _isSearchingGardenAddress ? null : () async {
+                    if (_gardenAddressController.text.trim().isEmpty) {
+                      _showError('Введите адрес');
+                      return;
+                    }
+                    setState(() => _isSearchingGardenAddress = true);
+                    try {
+                      final getLocationUseCase = locator<GetLocationUseCase>();
+                      final location = await getLocationUseCase.getByAddress(_gardenAddressController.text.trim());
+                      setState(() {
+                        _gardenAddress = location.address;
+                      });
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Адрес найден: ${location.address ?? "Неизвестно"}'),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                      }
+                    } catch (e) {
+                      if (mounted) {
+                        _showError('Не удалось найти адрес: $e');
+                      }
+                    } finally {
+                      setState(() => _isSearchingGardenAddress = false);
+                    }
+                  },
+                  icon: _isSearchingGardenAddress
+                      ? const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Icon(Icons.search),
+                  label: const Text('Найти'),
+                ),
+              ],
+            ),
+            if (_gardenAddress != null) ...[
+              const SizedBox(height: 8),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.green.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.green.withOpacity(0.3)),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.check_circle, color: Colors.green, size: 20),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'Найденный адрес: $_gardenAddress',
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
 
             const SizedBox(height: 30),
-
 
             ElevatedButton(
               onPressed: () async {

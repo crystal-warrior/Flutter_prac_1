@@ -85,6 +85,24 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<void> updateUser(User user) async {
+    // Сохраняем обновленные данные пользователя (БЕЗ пароля) в SharedPreferences
+    await _sharedPrefs.saveUserData(
+      user.login,
+      user.phone,
+      user.email,
+      user.region,
+      user.city,
+      user.address,
+    );
+    
+    // Обновляем текущего пользователя в памяти
+    _currentUser = user;
+    
+    print('✅ Данные пользователя ${user.login} успешно обновлены');
+  }
+
+  @override
   Future<void> logout() async {
     _currentUser = null;
     

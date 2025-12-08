@@ -60,12 +60,16 @@ class _WeatherApi implements WeatherApi {
   Future<Map<String, dynamic>> getCurrentWeatherByCity(
     String city,
     String lang,
+    String? timestamp,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'city': city,
       r'lang': lang,
     };
+    if (timestamp != null) {
+      queryParameters[r'_'] = timestamp;
+    }
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<Map<String, dynamic>>(Options(

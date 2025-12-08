@@ -20,6 +20,7 @@ abstract class WeatherApi {
   Future<Map<String, dynamic>> getCurrentWeatherByCity(
     @Query('city') String city,
     @Query('lang') String lang,
+    @Query('_') String? timestamp,
   );
 
 

@@ -193,7 +193,10 @@ void setupLocator() {
     () => RecommendedPlantsRepositoryImpl(locator<LocalRecommendedPlantsDataSource>()),
   );
   locator.registerLazySingleton<WeatherRepository>(
-    () => WeatherRepositoryImpl(locator<WeatherDataSource>()),
+    () => WeatherRepositoryImpl(
+      locator<WeatherDataSource>(),
+      locator<LocationDataSource>(),
+    ),
   );
   locator.registerLazySingleton<LocationRepository>(
     () => LocationRepositoryImpl(locator<LocationDataSource>()),
