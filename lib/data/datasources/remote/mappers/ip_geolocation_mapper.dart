@@ -22,3 +22,6 @@ extension IpGeolocationMapper on IpGeolocationDto {
 
 
 
+
+
+

@@ -40,3 +40,6 @@ extension OpenWeatherMapper on OpenWeatherDto {
 
 
 
+
+
+

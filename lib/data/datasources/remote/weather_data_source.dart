@@ -28,11 +28,11 @@ class WeatherDataSource {
 
   Future<WeatherDto> getCurrentWeatherByCity(String city) async {
     try {
-      // Очищаем название города от лишних пробелов
+
       final cleanCity = city.trim();
       print('Запрос погоды для города: "$cleanCity"');
       
-      // Добавляем timestamp для предотвращения кэширования
+
       final timestamp = DateTime.now().millisecondsSinceEpoch.toString();
       
       final response = await _weatherApi.getCurrentWeatherByCity(
@@ -74,7 +74,6 @@ class WeatherDataSource {
     }
   }
 
-  // Запрос 4: Погода на конкретную дату (для лунного календаря)
   Future<WeatherDto> getWeatherForDate(double lat, double lon, DateTime date) async {
     try {
       final response = await _dioClient.get(

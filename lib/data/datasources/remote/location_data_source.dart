@@ -36,7 +36,7 @@ class LocationDataSource {
         throw Exception('Разрешение на геолокацию отклонено навсегда');
       }
 
-      // Получаем текущую позицию
+
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
       );
@@ -48,7 +48,7 @@ class LocationDataSource {
 
       if (_geocodeApi != null) {
         try {
-          // Используем Retrofit API для геокодирования
+
           final response = await _geocodeApi!.geocode(
             '${position.longitude},${position.latitude}',
             'json',
@@ -65,10 +65,10 @@ class LocationDataSource {
             final geoObject = feature['GeoObject'];
             final metaData = geoObject['metaDataProperty']?['GeocoderMetaData'];
             
-            // Полный адрес
+
             address = metaData?['text'] as String?;
             
-            // Парсим компоненты адреса
+
             final addressData = metaData?['Address'];
             final components = addressData?['Components'] as List?;
             
@@ -133,7 +133,7 @@ class LocationDataSource {
       throw Exception('GeocodeApi не настроен');
     }
     try {
-      // Используем Retrofit API для обратного геокодирования
+
       final response = await _geocodeApi!.reverseGeocode(
         address,
         'json',
@@ -188,7 +188,8 @@ class LocationDataSource {
 
   // Запрос 8: Получение координат города
   Future<Location> getLocationByCity(String city) async {
-    // Используем Geocoding API для получения координат города
+
+
     return await getLocationByAddress(city);
   }
 

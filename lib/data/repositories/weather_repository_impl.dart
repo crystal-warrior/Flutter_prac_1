@@ -18,24 +18,23 @@ class WeatherRepositoryImpl implements WeatherRepository {
 
   @override
   Future<Weather> getCurrentWeatherByCity(String city) async {
-    // Сначала получаем координаты города через геокодирование для точности
-    // Это гарантирует, что мы получим погоду именно для запрошенного города
+
     final locationDataSource = _locationDataSource;
     if (locationDataSource != null) {
       try {
         final location = await locationDataSource.getLocationByCity(city);
         print('Получены координаты для города "$city": ${location.latitude}, ${location.longitude}');
-        // Используем координаты для получения точной погоды
+
         final dto = await _dataSource.getCurrentWeather(location.latitude, location.longitude);
         return dto.toDomain(cityName: city);
       } catch (e) {
-        // Если геокодирование не удалось, пробуем прямой запрос к API
+
         print('Геокодирование не удалось для города "$city", используем прямой запрос: $e');
         final dto = await _dataSource.getCurrentWeatherByCity(city);
         return dto.toDomain(cityName: city);
       }
     } else {
-      // Если LocationDataSource не доступен, используем прямой запрос
+
       final dto = await _dataSource.getCurrentWeatherByCity(city);
       return dto.toDomain(cityName: city);
     }

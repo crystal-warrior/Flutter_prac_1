@@ -8,7 +8,7 @@ class IpGeolocationDataSource {
   static const String _fields = 'status,message,country,countryCode,region,regionName,city,lat,lon,timezone,query';
 
   IpGeolocationDataSource(this._dioClient) {
-    // Используем Dio из DioClient для создания Retrofit API
+
     _ipGeolocationApi = IpGeolocationApi(_dioClient.dio);
   }
 
