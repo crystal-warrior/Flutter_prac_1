@@ -11,9 +11,9 @@ class PlantingCalendarRepositoryImpl implements PlantingCalendarRepository {
 
   @override
   Future<Map<String, List<PlantingEvent>>> getEvents(String userLogin) async {
-    // Всегда используем SQLite для получения событий конкретного пользователя
+
     final sqliteEvents = await _sqliteDataSource.getEvents(userLogin);
-    print('📦 Репозиторий: получено событий из SQLite для $userLogin: ${sqliteEvents.length}');
+    print(' Репозиторий: получено событий из SQLite для $userLogin: ${sqliteEvents.length}');
     return sqliteEvents;
   }
 
@@ -28,10 +28,10 @@ class PlantingCalendarRepositoryImpl implements PlantingCalendarRepository {
   Future<void> removeEvent(String dateKey, int index, String userLogin) async {
     await _localDataSource.removeEvent(dateKey, index);
     
-    // Для веб используем специальный метод удаления
+
     await _sqliteDataSource.deleteEventByDateKey(dateKey, index, userLogin);
     
-    // Для мобильных платформ используем удаление по ID
+
     final eventId = await _sqliteDataSource.getEventId(dateKey, index, userLogin);
     if (eventId != null) {
       await _sqliteDataSource.deleteEvent(eventId);

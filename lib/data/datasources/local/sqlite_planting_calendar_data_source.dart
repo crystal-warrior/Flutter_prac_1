@@ -182,7 +182,7 @@ class SqlitePlantingCalendarDataSource {
   // Добавление события для конкретного пользователя
   Future<void> addEvent(PlantingEvent event, String userLogin) async {
     if (kIsWeb) {
-      // На веб используем SharedPreferences
+
       await _addEventToSharedPrefs(event, userLogin);
       return;
     }
@@ -192,14 +192,14 @@ class SqlitePlantingCalendarDataSource {
       throw Exception('База данных недоступна');
     }
     
-    // Преобразуем доменную модель в DTO
+
     final dto = event.toDto(userLogin);
-    // Преобразуем DTO в Map для вставки в БД
+
     final id = await db.insert(
       _tableName,
       dto.toMap(),
     );
-    print('✅ Событие добавлено в БД: id=$id, date=${dto.date}, user=$userLogin, note=${dto.note}');
+    print(' Событие добавлено в БД: id=$id, date=${dto.date}, user=$userLogin, note=${dto.note}');
   }
 
   // Добавление события в SharedPreferences (для веб)

@@ -91,10 +91,10 @@ class PlantingCalendarCubit extends Cubit<PlantingCalendarState> {
       final dateKey = '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
       final existingEvents = state.getEventsForDate(date);
       
-      // Если событие уже существует, обновляем его (удаляем старое и добавляем новое)
+
       if (existingEvents != null && existingEvents.isNotEmpty) {
-        print('🔄 Обновление существующего события: dateKey=$dateKey, user=$userLogin');
-        // Удаляем старое событие
+        print('бновление существующего события: dateKey=$dateKey, user=$userLogin');
+
         final repository = locator<PlantingCalendarRepository>();
         await repository.removeEvent(dateKey, 0, userLogin);
       }
@@ -102,11 +102,11 @@ class PlantingCalendarCubit extends Cubit<PlantingCalendarState> {
       final newEvent = PlantingEvent(date: date, note: note.trim());
       print('➕ ${existingEvents != null && existingEvents.isNotEmpty ? "Обновление" : "Добавление"} события: date=${newEvent.date}, dateKey=${newEvent.dateKey}, note=${newEvent.note}, user=$userLogin');
       await _addPlantingEventUseCase(newEvent, userLogin);
-      print('✅ Событие ${existingEvents != null && existingEvents.isNotEmpty ? "обновлено" : "добавлено"}, перезагружаем события...');
+      print('Событие ${existingEvents != null && existingEvents.isNotEmpty ? "обновлено" : "добавлено"}, перезагружаем события...');
       await loadEvents();
-      print('✅ События перезагружены, текущее состояние: ${state.events.keys.toList()}');
+      print('События перезагружены, текущее состояние: ${state.events.keys.toList()}');
     } catch (e) {
-      print('❌ Ошибка при добавлении события: $e');
+      print('Ошибка при добавлении события: $e');
       emit(state.copyWith(error: e.toString()));
     }
   }
@@ -119,10 +119,10 @@ class PlantingCalendarCubit extends Cubit<PlantingCalendarState> {
         return;
       }
       final key = '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
-      // Используем репозиторий для удаления
+
       final repository = locator<PlantingCalendarRepository>();
       await repository.removeEvent(key, index, userLogin);
-      // Перезагружаем события
+
       await loadEvents();
     } catch (e) {
       emit(state.copyWith(error: e.toString()));
