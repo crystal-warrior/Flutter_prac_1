@@ -140,6 +140,7 @@ void setupLocator() {
   locator.registerLazySingleton<LocalAuthDataSource>(
     () => LocalAuthDataSource(
       locator<SharedPreferencesDataSource>(),
+      locator<SecureStorageDataSource>(),
     ),
   );
   locator.registerLazySingleton<LocalCareTipsDataSource>(() => LocalCareTipsDataSource());
@@ -165,7 +166,6 @@ void setupLocator() {
     () => AuthRepositoryImpl(
       locator<LocalAuthDataSource>(),
       locator<SharedPreferencesDataSource>(),
-      locator<SecureStorageDataSource>(),
     ),
   );
   locator.registerLazySingleton<CareTipsRepository>(
