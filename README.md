@@ -2,10 +2,6 @@
 
 <div align="center">
 
-![Flutter](https://img.shields.io/badge/Flutter-3.9.2+-02569B?logo=flutter&logoColor=white)
-![Dart](https://img.shields.io/badge/Dart-3.9.2+-0175C2?logo=dart&logoColor=white)
-![License](https://img.shields.io/badge/license-MIT-green)
-
 **Умное приложение для садоводов с прогнозами погоды, календарем посадок и персональными рекомендациями**
 
 [Возможности](#-возможности) • [Технологии](#️-технологии) • [API](#-api-интеграции)
